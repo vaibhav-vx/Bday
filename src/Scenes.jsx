@@ -263,6 +263,26 @@ const Page = forwardRef((props, ref) => {
 });
 
 export function MemoryBookScene({ onNext }) {
+  const memories = [
+    { img: "/assets/memory1.jpg", caption: "Beautiful moments ✨", icon: Sparkles, iconProps: { top: '5%', right: '10%', color: '#ec4899', size: 24 } },
+    { img: "/assets/memory2.jpg", caption: "Always smiling ❤️", icon: Heart, iconProps: { bottom: '10%', right: '15%', color: '#ec4899', size: 28 } },
+    { img: "/assets/memory3.jpg", caption: "Looking gorgeous! 🌸", icon: Star, iconProps: { top: '15%', left: '5%', color: '#fbbf24', size: 24 } },
+    { img: "/assets/memory4.jpg", caption: "Such a vibe 🌟", icon: Gift, iconProps: { bottom: '5%', left: '10%', color: '#8b5cf6', size: 32 } },
+    { img: "/assets/memory5.jpg", caption: "Precious memories 💖", icon: Heart, iconProps: { top: '10%', right: '10%', color: '#ec4899', size: 24 } },
+    { img: "/assets/memory6.jpg", caption: "Slaying as always 🔥", icon: Sparkles, iconProps: { bottom: '15%', left: '10%', color: '#fbbf24', size: 24 } },
+    { img: "/assets/memory7.jpg", caption: "Best days 🥰", icon: Star, iconProps: { top: '10%', left: '15%', color: '#8b5cf6', size: 28 } },
+    { img: "/assets/memory8.jpg", caption: "Radiant! ✨", icon: Heart, iconProps: { bottom: '10%', right: '5%', color: '#ec4899', size: 24 } },
+    { img: "/assets/memory9.jpg", caption: "Aesthetic ✨", icon: Sparkles, iconProps: { top: '5%', right: '10%', color: '#fbbf24', size: 24 } },
+    { img: "/assets/memory10.jpg", caption: "So pretty 🌸", icon: Star, iconProps: { bottom: '10%', right: '15%', color: '#8b5cf6', size: 28 } },
+    { img: "/assets/memory11.jpg", caption: "Cute! ❤️", icon: Heart, iconProps: { top: '10%', left: '5%', color: '#ec4899', size: 32 } },
+    { img: "/assets/memory12.jpg", caption: "Glow up! ✨", icon: Sparkles, iconProps: { bottom: '15%', right: '10%', color: '#fbbf24', size: 24 } },
+    { img: "/assets/memory13.jpg", caption: "Happy vibes 😊", icon: Star, iconProps: { top: '15%', left: '15%', color: '#8b5cf6', size: 24 } },
+    { img: "/assets/memory14.jpg", caption: "Unforgettable 💖", icon: Heart, iconProps: { bottom: '10%', left: '5%', color: '#ec4899', size: 28 } },
+    { img: "/assets/memory15.jpg", caption: "Iconic 👑", icon: Gift, iconProps: { top: '10%', right: '10%', color: '#fbbf24', size: 24 } },
+    { img: "/assets/memory16.jpg", caption: "Stunning! 💫", icon: Sparkles, iconProps: { bottom: '15%', left: '15%', color: '#8b5cf6', size: 32 } },
+    { img: "/assets/memory17.jpg", caption: "The best! ❤️", icon: Heart, iconProps: { top: '5%', right: '5%', color: '#ec4899', size: 28 } }
+  ];
+
   return (
     <motion.div className="scene-container" {...fadeIn}>
       <h2 className="title-gold" style={{ marginBottom: '2rem' }}>Flip the pages</h2>
@@ -290,29 +310,22 @@ export function MemoryBookScene({ onNext }) {
            </div>
         </Page>
         
-        {/* Page 1 */}
-        <Page>
-          <Sparkles className="doodle" style={{ top: '5%', right: '10%', color: '#ec4899' }} size={24} />
-          <Star className="doodle" style={{ bottom: '20%', left: '10%', color: '#fbbf24' }} size={24} />
-          
-          <div className="polaroid">
-            <img src="/assets/photo.jpg" alt="Memory" />
-            <p style={{ color: '#333', marginTop: '10px', fontFamily: "'Playfair Display', serif" }}>Late night talks & crazy laughs! ✨</p>
-          </div>
-        </Page>
+        {/* Dynamic Pages */}
+        {memories.map((mem, index) => {
+          const Icon = mem.icon;
+          const rotate = index % 2 === 0 ? 2 : -2;
+          return (
+            <Page key={index}>
+              <Icon className="doodle" style={{ ...mem.iconProps, position: 'absolute' }} size={mem.iconProps.size} />
+              <div className="polaroid" style={{ transform: `rotate(${rotate}deg)`, marginTop: '1rem' }}>
+                <img src={mem.img} alt={`Memory ${index + 1}`} style={{ height: '280px', objectFit: 'cover' }} />
+                <p style={{ color: '#333', marginTop: '10px', fontFamily: "'Playfair Display', serif", fontSize: '1rem' }}>{mem.caption}</p>
+              </div>
+            </Page>
+          );
+        })}
 
-        {/* Page 2 */}
-        <Page>
-          <Gift className="doodle" style={{ top: '15%', left: '5%', color: '#8b5cf6', transform: 'rotate(-10deg)' }} size={32} />
-          <Heart className="doodle" style={{ bottom: '10%', right: '15%', color: '#ec4899' }} size={28} />
-
-          <div className="polaroid" style={{ transform: 'rotate(2deg)' }}>
-            <img src="/assets/photo.jpg" alt="Memory" />
-            <p style={{ color: '#333', marginTop: '10px', fontFamily: "'Playfair Display', serif" }}>Forever my favorite person! ❤️</p>
-          </div>
-        </Page>
-
-        {/* Page 3 - Camera prompt */}
+        {/* Camera prompt */}
         <Page density="hard">
           <Star className="doodle" style={{ top: '15%', right: '15%', color: '#fbbf24', transform: 'rotate(20deg)' }} size={36} />
           
