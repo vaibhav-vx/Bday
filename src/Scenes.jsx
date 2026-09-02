@@ -184,14 +184,14 @@ export function MemoryBookScene({ onNext }) {
       >
         {/* Cover */}
         <Page density="hard">
-           <div className="book-cover" style={{ width: '100%', height: '100%', position: 'relative' }}>
+           <div className="book-cover" style={{ width: '100%', height: '100%', position: 'relative', backgroundImage: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url(/assets/cover.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
              <Star className="doodle" style={{ top: '10%', left: '10%', color: '#fbbf24', transform: 'rotate(-15deg)' }} size={32} />
              <Cake className="doodle" style={{ bottom: '15%', right: '15%', color: '#ec4899', transform: 'rotate(10deg)' }} size={40} />
              
-             <h1>Akansha's</h1>
-             <h2>Memories</h2>
-             <Heart size={56} color="#ec4899" style={{ marginTop: '1rem' }} />
-             <p style={{ marginTop: 'auto', fontSize: '0.9rem', opacity: 0.8 }}>Drag to open</p>
+             <h1 style={{ textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>Akansha's</h1>
+             <h2 style={{ textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>Memories</h2>
+             <Heart size={56} color="#ec4899" style={{ marginTop: '1rem', filter: 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))' }} />
+             <p style={{ marginTop: 'auto', fontSize: '0.9rem', opacity: 0.9, textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>Drag to open</p>
            </div>
         </Page>
         
