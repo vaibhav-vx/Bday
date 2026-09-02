@@ -264,23 +264,23 @@ const Page = forwardRef((props, ref) => {
 
 export function MemoryBookScene({ onNext }) {
   const memories = [
-    { img: "/assets/memory1.jpg", caption: "Beautiful moments ✨", icon: Sparkles, iconProps: { top: '5%', right: '10%', color: '#ec4899', size: 24 } },
-    { img: "/assets/memory2.jpg", caption: "Always smiling ❤️", icon: Heart, iconProps: { bottom: '10%', right: '15%', color: '#ec4899', size: 28 } },
-    { img: "/assets/memory3.jpg", caption: "Looking gorgeous! 🌸", icon: Star, iconProps: { top: '15%', left: '5%', color: '#fbbf24', size: 24 } },
-    { img: "/assets/memory4.jpg", caption: "Such a vibe 🌟", icon: Gift, iconProps: { bottom: '5%', left: '10%', color: '#8b5cf6', size: 32 } },
-    { img: "/assets/memory5.jpg", caption: "Precious memories 💖", icon: Heart, iconProps: { top: '10%', right: '10%', color: '#ec4899', size: 24 } },
-    { img: "/assets/memory6.jpg", caption: "Slaying as always 🔥", icon: Sparkles, iconProps: { bottom: '15%', left: '10%', color: '#fbbf24', size: 24 } },
-    { img: "/assets/memory7.jpg", caption: "Best days 🥰", icon: Star, iconProps: { top: '10%', left: '15%', color: '#8b5cf6', size: 28 } },
-    { img: "/assets/memory8.jpg", caption: "Radiant! ✨", icon: Heart, iconProps: { bottom: '10%', right: '5%', color: '#ec4899', size: 24 } },
-    { img: "/assets/memory9.jpg", caption: "Aesthetic ✨", icon: Sparkles, iconProps: { top: '5%', right: '10%', color: '#fbbf24', size: 24 } },
-    { img: "/assets/memory10.jpg", caption: "So pretty 🌸", icon: Star, iconProps: { bottom: '10%', right: '15%', color: '#8b5cf6', size: 28 } },
-    { img: "/assets/memory11.jpg", caption: "Cute! ❤️", icon: Heart, iconProps: { top: '10%', left: '5%', color: '#ec4899', size: 32 } },
-    { img: "/assets/memory12.jpg", caption: "Glow up! ✨", icon: Sparkles, iconProps: { bottom: '15%', right: '10%', color: '#fbbf24', size: 24 } },
-    { img: "/assets/memory13.jpg", caption: "Happy vibes 😊", icon: Star, iconProps: { top: '15%', left: '15%', color: '#8b5cf6', size: 24 } },
-    { img: "/assets/memory14.jpg", caption: "Unforgettable 💖", icon: Heart, iconProps: { bottom: '10%', left: '5%', color: '#ec4899', size: 28 } },
-    { img: "/assets/memory15.jpg", caption: "Iconic 👑", icon: Gift, iconProps: { top: '10%', right: '10%', color: '#fbbf24', size: 24 } },
-    { img: "/assets/memory16.jpg", caption: "Stunning! 💫", icon: Sparkles, iconProps: { bottom: '15%', left: '15%', color: '#8b5cf6', size: 32 } },
-    { img: "/assets/memory17.jpg", caption: "The best! ❤️", icon: Heart, iconProps: { top: '5%', right: '5%', color: '#ec4899', size: 28 } }
+    { img: "/assets/memory1.jpg", caption: "The day my world got a little brighter ✨", icon: Sparkles, iconProps: { top: '5%', right: '10%', color: '#ec4899', size: 30 } },
+    { img: "/assets/memory2.jpg", caption: "That smile I could look at forever ❤️", icon: Heart, iconProps: { bottom: '10%', right: '15%', color: '#ec4899', size: 35 } },
+    { img: "/assets/memory3.jpg", caption: "Effortlessly gorgeous, inside and out 🌸", icon: Star, iconProps: { top: '15%', left: '8%', color: '#fbbf24', size: 28 } },
+    { img: "/assets/memory4.jpg", caption: "You are the main character of my life 🌟", icon: Sparkles, iconProps: { bottom: '5%', left: '10%', color: '#8b5cf6', size: 32 } },
+    { img: "/assets/memory5.jpg", caption: "A moment I'll keep in my heart always 💖", icon: Heart, iconProps: { top: '10%', right: '12%', color: '#ec4899', size: 28 } },
+    { img: "/assets/memory6.jpg", caption: "Looking at you feels like magic ✨", icon: Sparkles, iconProps: { bottom: '15%', left: '10%', color: '#fbbf24', size: 26 } },
+    { img: "/assets/memory7.jpg", caption: "The best part of every single day 🥰", icon: Star, iconProps: { top: '8%', left: '15%', color: '#8b5cf6', size: 30 } },
+    { img: "/assets/memory8.jpg", caption: "Just you being your absolute radiant self 💫", icon: Heart, iconProps: { bottom: '10%', right: '8%', color: '#ec4899', size: 28 } },
+    { img: "/assets/memory9.jpg", caption: "God really took His time with you ✨", icon: Sparkles, iconProps: { top: '5%', right: '10%', color: '#fbbf24', size: 28 } },
+    { img: "/assets/memory10.jpg", caption: "You make everything feel so special 🌸", icon: Star, iconProps: { bottom: '12%', right: '15%', color: '#8b5cf6', size: 32 } },
+    { img: "/assets/memory11.jpg", caption: "My favorite person in the entire universe ❤️", icon: Heart, iconProps: { top: '10%', left: '5%', color: '#ec4899', size: 36 } },
+    { img: "/assets/memory12.jpg", caption: "You glow differently, you know that? ✨", icon: Sparkles, iconProps: { bottom: '15%', right: '10%', color: '#fbbf24', size: 26 } },
+    { img: "/assets/memory13.jpg", caption: "The reason behind all my happy vibes 😊", icon: Star, iconProps: { top: '15%', left: '15%', color: '#8b5cf6', size: 28 } },
+    { img: "/assets/memory14.jpg", caption: "I never want to forget this moment 💖", icon: Heart, iconProps: { bottom: '10%', left: '8%', color: '#ec4899', size: 30 } },
+    { img: "/assets/memory15.jpg", caption: "An absolute queen, today and always 👑", icon: Gift, iconProps: { top: '10%', right: '10%', color: '#fbbf24', size: 32 } },
+    { img: "/assets/memory16.jpg", caption: "Stunning beyond words! 💫", icon: Sparkles, iconProps: { bottom: '15%', left: '15%', color: '#8b5cf6', size: 34 } },
+    { img: "/assets/memory17.jpg", caption: "Here's to you, the best thing ever ❤️", icon: Heart, iconProps: { top: '5%', right: '5%', color: '#ec4899', size: 40 } }
   ];
 
   return (
