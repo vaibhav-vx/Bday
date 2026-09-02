@@ -323,10 +323,16 @@ export function MemoryBookScene({ onNext }) {
             <Page key={index}>
               <Icon1 className="doodle" style={{ ...mem.iconProps, position: 'absolute' }} size={mem.iconProps.size} />
               <Icon2 className="doodle" style={{ top: '15%', left: index % 2 === 0 ? '80%' : '10%', color: index % 2 === 0 ? '#fbbf24' : '#ec4899', position: 'absolute', opacity: 0.5, transform: 'rotate(15deg)' }} size={20} />
-              <div className="polaroid" style={{ transform: `rotate(${rotate}deg)`, marginTop: '1.5rem' }}>
+              <motion.div 
+                className="polaroid" 
+                style={{ marginTop: '1.5rem', position: 'relative', zIndex: 1 }}
+                initial={{ rotate: rotate }}
+                whileHover={{ scale: 1.05, rotate: 0, zIndex: 10 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
                 <img src={mem.img} alt={`Memory ${index + 1}`} style={{ height: '280px', objectFit: 'cover', objectPosition: 'top center' }} />
                 <p style={{ color: '#333', marginTop: '10px', fontFamily: "'Playfair Display', serif", fontSize: '1rem' }}>{mem.caption}</p>
-              </div>
+              </motion.div>
             </Page>
           );
         })}

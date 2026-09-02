@@ -315,6 +315,18 @@ p {
   border-radius: 10px;
 }
 
+/* Cursor Blink for Typewriter */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.cursor-blink {
+  display: inline-block;
+  animation: blink 0.8s step-end infinite;
+  margin-left: 2px;
+  font-weight: bold;
+}
+
 /* React Pageflip Book Styles */
 .book-container {
   display: flex;
