@@ -136,6 +136,7 @@ export function CakeScene({ onNext }) {
         setAttempt(2);
         setCountdown(null);
         const audio = new Audio('/assets/song.mp3');
+        audio.loop = true;
         audio.play().catch(e => console.log("Audio play blocked", e));
         setTimeout(onNext, 6000); 
       }
@@ -280,7 +281,9 @@ export function MemoryBookScene({ onNext }) {
     { img: "/assets/memory14.jpg", caption: "I never want to forget this moment 💖", icon: Heart, iconProps: { bottom: '10%', left: '8%', color: '#ec4899', size: 30 } },
     { img: "/assets/memory15.jpg", caption: "An absolute queen, today and always 👑", icon: Gift, iconProps: { top: '10%', right: '10%', color: '#fbbf24', size: 32 } },
     { img: "/assets/memory16.jpg", caption: "Stunning beyond words! 💫", icon: Sparkles, iconProps: { bottom: '15%', left: '15%', color: '#8b5cf6', size: 34 } },
-    { img: "/assets/memory17.jpg", caption: "Here's to you, the best thing ever ❤️", icon: Heart, iconProps: { top: '5%', right: '5%', color: '#ec4899', size: 40 } }
+    { img: "/assets/memory17.jpg", caption: "Here's to you, the best thing ever ❤️", icon: Heart, iconProps: { top: '5%', right: '5%', color: '#ec4899', size: 40 } },
+    { img: "/assets/memory18.jpg", caption: "Too gorgeous to handle 🔥", icon: Star, iconProps: { top: '10%', left: '10%', color: '#fbbf24', size: 32 } },
+    { img: "/assets/memory19.jpg", caption: "An actual angel ✨", icon: Sparkles, iconProps: { bottom: '10%', right: '15%', color: '#ec4899', size: 30 } }
   ];
 
   return (
@@ -299,26 +302,29 @@ export function MemoryBookScene({ onNext }) {
       >
         {/* Cover */}
         <Page density="hard">
-           <div className="book-cover" style={{ width: '100%', height: '100%', position: 'relative', backgroundImage: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url(/assets/cover.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-             <Star className="doodle" style={{ top: '10%', left: '10%', color: '#fbbf24', transform: 'rotate(-15deg)' }} size={32} />
-             <Cake className="doodle" style={{ bottom: '15%', right: '15%', color: '#ec4899', transform: 'rotate(10deg)' }} size={40} />
-             
-             <h1 style={{ textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>Akansha's</h1>
-             <h2 style={{ textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>Memories</h2>
-             <Heart size={56} color="#ec4899" style={{ marginTop: '1rem', filter: 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))' }} />
-             <p style={{ marginTop: 'auto', fontSize: '0.9rem', opacity: 0.9, textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>Drag to open</p>
+           <div className="book-cover" style={{ width: '100%', height: '100%', position: 'relative' }}>
+             <div className="cover-frame">
+               <div className="cover-content">
+                 <h1 style={{ textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>Akansha's</h1>
+                 <h2 style={{ textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>Memories</h2>
+                 <Heart size={56} color="#ec4899" style={{ marginTop: '1rem', filter: 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))' }} />
+                 <p style={{ marginTop: 'auto', fontSize: '0.9rem', opacity: 0.9, textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>Drag to open</p>
+               </div>
+             </div>
            </div>
         </Page>
         
         {/* Dynamic Pages */}
         {memories.map((mem, index) => {
-          const Icon = mem.icon;
+          const Icon1 = mem.icon;
+          const Icon2 = index % 2 === 0 ? Heart : Sparkles;
           const rotate = index % 2 === 0 ? 2 : -2;
           return (
             <Page key={index}>
-              <Icon className="doodle" style={{ ...mem.iconProps, position: 'absolute' }} size={mem.iconProps.size} />
-              <div className="polaroid" style={{ transform: `rotate(${rotate}deg)`, marginTop: '1rem' }}>
-                <img src={mem.img} alt={`Memory ${index + 1}`} style={{ height: '280px', objectFit: 'cover' }} />
+              <Icon1 className="doodle" style={{ ...mem.iconProps, position: 'absolute' }} size={mem.iconProps.size} />
+              <Icon2 className="doodle" style={{ top: '15%', left: index % 2 === 0 ? '80%' : '10%', color: index % 2 === 0 ? '#fbbf24' : '#ec4899', position: 'absolute', opacity: 0.5, transform: 'rotate(15deg)' }} size={20} />
+              <div className="polaroid" style={{ transform: `rotate(${rotate}deg)`, marginTop: '1.5rem' }}>
+                <img src={mem.img} alt={`Memory ${index + 1}`} style={{ height: '280px', objectFit: 'cover', objectPosition: 'top center' }} />
                 <p style={{ color: '#333', marginTop: '10px', fontFamily: "'Playfair Display', serif", fontSize: '1rem' }}>{mem.caption}</p>
               </div>
             </Page>
