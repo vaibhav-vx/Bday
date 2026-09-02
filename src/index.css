@@ -194,14 +194,20 @@ p {
 /* ENVELOPE REDESIGN */
 .envelope-container {
   position: relative;
-  width: 320px;
-  height: 220px;
+  width: 400px;
+  height: 250px;
   display: flex;
   justify-content: center;
   align-items: center;
   perspective: 1500px;
-  margin-top: 100px;
 }
+
+.envelope-wrapper-2 {
+  width: 400px;
+  height: 250px;
+  cursor: pointer;
+}
+
 .envelope {
   position: relative;
   width: 100%;
@@ -215,10 +221,10 @@ p {
   position: absolute;
   width: 0;
   height: 0;
-  border-left: 160px solid #e1b382;
-  border-right: 160px solid #e1b382;
-  border-bottom: 110px solid #e5bd92;
-  border-top: 110px solid transparent;
+  border-left: 200px solid #e1b382;
+  border-right: 200px solid #e1b382;
+  border-bottom: 125px solid #e5bd92;
+  border-top: 125px solid transparent;
   bottom: 0;
   left: 0;
   z-index: 3;
@@ -232,33 +238,27 @@ p {
   left: 0;
   width: 0;
   height: 0;
-  border-left: 160px solid transparent;
-  border-right: 160px solid transparent;
-  border-top: 120px solid #d4a373;
+  border-left: 200px solid transparent;
+  border-right: 200px solid transparent;
+  border-top: 140px solid #d4a373;
   transform-origin: top center;
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.8s;
   z-index: 4;
-  cursor: pointer;
 }
 
 .envelope-flap.open {
   transform: rotateX(180deg);
-  z-index: 1; /* Drop behind the letter after opening */
+  z-index: 1; 
 }
 
 .letter {
-  position: absolute;
   background: #fffdf8;
-  width: 280px;
-  height: 380px;
-  left: 20px;
-  bottom: 10px; /* Inside the envelope initially */
+  width: 320px;
+  height: 420px;
   border-radius: 8px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   padding: 2.5rem 2rem;
   color: #333;
-  z-index: 2; /* Sandwiched between back and front */
-  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -323,3 +323,10 @@ p {
   position: absolute;
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
+
+.doodle {
+  position: absolute;
+  opacity: 0.8;
+  color: #ec4899;
+}
+

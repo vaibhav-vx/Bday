@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, forwardRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { Camera, PartyPopper, Heart } from 'lucide-react';
+import { Camera, PartyPopper, Heart, Sparkles, Star, Cake, Gift } from 'lucide-react';
 import HTMLFlipBook from 'react-pageflip';
 
 const fadeIn = {
@@ -47,7 +47,7 @@ export function CakeScene({ onNext }) {
       } else if (attempt === 1) {
         setBlown(true);
         setAttempt(2);
-        setCountdown(null); // Ensure countdown doesn't render
+        setCountdown(null);
         const audio = new Audio('/assets/song.mp3');
         audio.play().catch(e => console.log("Audio play blocked", e));
         setTimeout(onNext, 5000); 
@@ -105,37 +105,55 @@ export function EnvelopeScene({ onNext }) {
   const handleOpen = () => {
     if (opened) return;
     setOpened(true);
-    // After flap opens, slide letter up
     setTimeout(() => {
       setLetterOut(true);
-    }, 500); 
+    }, 800); 
   };
 
   return (
     <motion.div className="scene-container" {...fadeIn}>
       <div className="envelope-container">
-        <div className="envelope">
-          {/* Back is just the background of envelope */}
-          <div className={`letter ${letterOut ? 'out' : ''}`}>
-             <h2 style={{ color: '#ec4899', fontSize: '1.6rem', marginBottom: '1rem' }}>Happy Birthday Akansha!</h2>
-             <p style={{ color: '#555', textAlign: 'left', fontStyle: 'italic', fontSize: '1rem' }}>
-              Wishing you the happiest of birthdays! May this year bring you as much joy and laughter as you bring to everyone around you. Keep shining and never stop being the amazing person you are.
-             </p>
-             <p style={{ color: '#555', textAlign: 'left', fontWeight: 'bold', fontSize: '1rem' }}>With lots of love,</p>
-             
-             {letterOut && (
-               <button className="btn-primary" style={{ marginTop: '1.5rem', padding: '0.6rem 1.2rem', fontSize: '1rem' }} onClick={onNext}>
-                 Thanks A Lot
-               </button>
-             )}
+        
+        {/* Envelope Side */}
+        <motion.div 
+          className="envelope-wrapper-2"
+          onClick={handleOpen}
+          animate={letterOut ? { x: -180, scale: 0.8, rotate: -5, opacity: 0.4 } : { x: 0, scale: 1, rotate: 0 }}
+          transition={{ duration: 1, ease: "easeInOut" }}
+          style={{ position: 'relative', zIndex: letterOut ? 1 : 10 }}
+        >
+          <div className="envelope">
+            <div className="envelope-front"></div>
+            <div className={`envelope-flap ${opened ? 'open' : ''}`}>
+               {!opened && <div style={{ position: 'absolute', top: '-60px', left: '-50px', width: '100px', textAlign: 'center', color: '#fff', fontSize: '1.2rem' }}>Open Me</div>}
+            </div>
           </div>
+        </motion.div>
+
+        {/* Letter Front */}
+        <motion.div 
+          className="letter"
+          animate={
+            !opened ? { y: 0, scale: 0.8, opacity: 0 } : 
+            !letterOut ? { y: -150, scale: 0.8, opacity: 1, zIndex: 5 } : 
+            { y: -30, x: 120, scale: 1.1, opacity: 1, zIndex: 20 }
+          }
+          transition={{ duration: 1, ease: "easeInOut" }}
+          style={{ position: 'absolute', pointerEvents: letterOut ? 'auto' : 'none' }}
+        >
+          <h2 style={{ color: '#ec4899', fontSize: '1.8rem', marginBottom: '1rem' }}>Happy Birthday Akansha!</h2>
+          <p style={{ color: '#555', textAlign: 'left', fontStyle: 'italic', fontSize: '1.1rem', flex: 1 }}>
+            Wishing you the happiest of birthdays! May this year bring you as much joy and laughter as you bring to everyone around you. Keep shining and never stop being the amazing person you are.
+          </p>
+          <p style={{ color: '#555', textAlign: 'left', fontWeight: 'bold', fontSize: '1.1rem', width: '100%' }}>With lots of love,</p>
           
-          <div className="envelope-front"></div>
-          
-          <div className={`envelope-flap ${opened ? 'open' : ''}`} onClick={handleOpen}>
-             {!opened && <div style={{ position: 'absolute', top: '-60px', left: '-50px', width: '100px', textAlign: 'center', color: '#fff', fontSize: '1.2rem' }}>Open Me</div>}
-          </div>
-        </div>
+          {letterOut && (
+            <button className="btn-primary" style={{ marginTop: '1.5rem', padding: '0.8rem 1.5rem', fontSize: '1rem' }} onClick={onNext}>
+              Thanks A Lot
+            </button>
+          )}
+        </motion.div>
+
       </div>
     </motion.div>
   );
@@ -143,7 +161,7 @@ export function EnvelopeScene({ onNext }) {
 
 const Page = forwardRef((props, ref) => {
   return (
-    <div className="book-page" ref={ref} data-density={props.density || 'hard'}>
+    <div className="book-page" ref={ref} data-density={props.density || 'hard'} style={{ position: 'relative' }}>
       {props.children}
     </div>
   );
@@ -152,43 +170,60 @@ const Page = forwardRef((props, ref) => {
 export function MemoryBookScene({ onNext }) {
   return (
     <motion.div className="scene-container" {...fadeIn}>
-      <h2 className="title-gold" style={{ marginBottom: '2rem' }}>Drag pages to flip</h2>
+      <h2 className="title-gold" style={{ marginBottom: '2rem' }}>Flip the pages</h2>
       <HTMLFlipBook 
-        width={300} 
-        height={400} 
+        width={320} 
+        height={450} 
         size="stretch"
         minWidth={300}
         maxWidth={400}
-        minHeight={400}
+        minHeight={450}
         maxHeight={500}
         showCover={true}
         className="book-container"
       >
+        {/* Cover */}
         <Page density="hard">
-           <div className="book-cover" style={{ width: '100%', height: '100%' }}>
-             <h1>Our Memories</h1>
-             <Heart size={48} color="#ec4899" style={{ marginTop: '2rem' }} />
+           <div className="book-cover" style={{ width: '100%', height: '100%', position: 'relative' }}>
+             <Star className="doodle" style={{ top: '10%', left: '10%', color: '#fbbf24', transform: 'rotate(-15deg)' }} size={32} />
+             <Cake className="doodle" style={{ bottom: '15%', right: '15%', color: '#ec4899', transform: 'rotate(10deg)' }} size={40} />
+             
+             <h1>Akansha's</h1>
+             <h2>Memories</h2>
+             <Heart size={56} color="#ec4899" style={{ marginTop: '1rem' }} />
+             <p style={{ marginTop: 'auto', fontSize: '0.9rem', opacity: 0.8 }}>Drag to open</p>
            </div>
         </Page>
         
+        {/* Page 1 */}
         <Page>
+          <Sparkles className="doodle" style={{ top: '5%', right: '10%', color: '#ec4899' }} size={24} />
+          <Star className="doodle" style={{ bottom: '20%', left: '10%', color: '#fbbf24' }} size={24} />
+          
           <div className="polaroid">
             <img src="/assets/photo.jpg" alt="Memory" />
-            <p style={{ color: '#333', marginTop: '10px', fontFamily: "'Playfair Display', serif" }}>Good Times</p>
+            <p style={{ color: '#333', marginTop: '10px', fontFamily: "'Playfair Display', serif" }}>Late night talks & crazy laughs! ✨</p>
           </div>
         </Page>
 
+        {/* Page 2 */}
         <Page>
+          <Gift className="doodle" style={{ top: '15%', left: '5%', color: '#8b5cf6', transform: 'rotate(-10deg)' }} size={32} />
+          <Heart className="doodle" style={{ bottom: '10%', right: '15%', color: '#ec4899' }} size={28} />
+
           <div className="polaroid" style={{ transform: 'rotate(2deg)' }}>
             <img src="/assets/photo.jpg" alt="Memory" />
-            <p style={{ color: '#333', marginTop: '10px', fontFamily: "'Playfair Display', serif" }}>Always smiling</p>
+            <p style={{ color: '#333', marginTop: '10px', fontFamily: "'Playfair Display', serif" }}>Forever my favorite person! ❤️</p>
           </div>
         </Page>
 
+        {/* Page 3 - Camera prompt */}
         <Page density="hard">
+          <Star className="doodle" style={{ top: '15%', right: '15%', color: '#fbbf24', transform: 'rotate(20deg)' }} size={36} />
+          
           <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <Camera size={64} style={{ margin: '0 auto 2rem', color: '#8b5cf6' }} />
-            <h2 style={{ color: '#333', textAlign: 'center' }}>Let's take a memory picture</h2>
+            <h2 style={{ color: '#333', textAlign: 'center', fontSize: '1.8rem' }}>Let's take a memory picture</h2>
             <button className="btn-primary" style={{ marginTop: '2rem' }} onClick={onNext}>Open Camera</button>
           </div>
         </Page>
