@@ -207,7 +207,7 @@ export function EnvelopeScene({ onNext }) {
         <motion.div 
           className="envelope-wrapper-2"
           onClick={handleOpen}
-          animate={letterOut ? { x: -180, scale: 0.8, rotate: -5, opacity: 0.4 } : { x: 0, scale: 1, rotate: 0 }}
+          animate={letterOut ? { x: '-45vw', scale: 0.75, rotate: -5, opacity: 0.4 } : { x: 0, scale: 1, rotate: 0 }}
           transition={{ duration: 1, ease: "easeInOut" }}
           style={{ position: 'relative', zIndex: letterOut ? 1 : 10 }}
         >
@@ -215,6 +215,22 @@ export function EnvelopeScene({ onNext }) {
             <div className="envelope-front"></div>
             <div className={`envelope-flap ${opened ? 'open' : ''}`}>
                {!opened && <div style={{ position: 'absolute', top: '-60px', left: '-50px', width: '100px', textAlign: 'center', color: '#fff', fontSize: '1.2rem' }}>Open Me</div>}
+            </div>
+            {/* Inner lining shows when open */}
+            <div className={`envelope-lining ${opened ? 'visible' : ''}`}></div>
+            {/* Postage stamp */}
+            <div className="envelope-stamp">
+              <span className="stamp-heart">💌</span>
+              <span className="stamp-label">Love Mail</span>
+            </div>
+            {/* Postmark */}
+            <div className="envelope-postmark">
+              <span className="postmark-text">Sent With{"\n"}Love</span>
+            </div>
+            {/* Handwritten address */}
+            <div className="envelope-address">
+              <div className="to-label">To:</div>
+              <div className="to-name">Akansha 💕</div>
             </div>
           </div>
         </motion.div>
@@ -264,41 +280,42 @@ const Page = forwardRef((props, ref) => {
 });
 
 export function MemoryBookScene({ onNext }) {
+  // Dynamically calculate book dimensions for responsive layout
+  const bookWidth = Math.min(280, Math.floor(window.innerWidth * 0.42));
+  const bookHeight = Math.round(bookWidth * 1.4);
+
   const memories = [
-    { img: "/assets/memory1.jpg", caption: "The day my world got a little brighter ✨", icon: Sparkles, iconProps: { top: '5%', right: '10%', color: '#ec4899', size: 30 } },
-    { img: "/assets/memory2.jpg", caption: "That smile I could look at forever ❤️", icon: Heart, iconProps: { bottom: '10%', right: '15%', color: '#ec4899', size: 35 } },
-    { img: "/assets/memory3.jpg", caption: "Effortlessly gorgeous, inside and out 🌸", icon: Star, iconProps: { top: '15%', left: '8%', color: '#fbbf24', size: 28 } },
-    { img: "/assets/memory4.jpg", caption: "You are the main character of my life 🌟", icon: Sparkles, iconProps: { bottom: '5%', left: '10%', color: '#8b5cf6', size: 32 } },
-    { img: "/assets/memory5.jpg", caption: "A moment I'll keep in my heart always 💖", icon: Heart, iconProps: { top: '10%', right: '12%', color: '#ec4899', size: 28 } },
-    { img: "/assets/memory6.jpg", caption: "Looking at you feels like magic ✨", icon: Sparkles, iconProps: { bottom: '15%', left: '10%', color: '#fbbf24', size: 26 } },
-    { img: "/assets/memory7.jpg", caption: "The best part of every single day 🥰", icon: Star, iconProps: { top: '8%', left: '15%', color: '#8b5cf6', size: 30 } },
-    { img: "/assets/memory8.jpg", caption: "Just you being your absolute radiant self 💫", icon: Heart, iconProps: { bottom: '10%', right: '8%', color: '#ec4899', size: 28 } },
-    { img: "/assets/memory9.jpg", caption: "God really took His time with you ✨", icon: Sparkles, iconProps: { top: '5%', right: '10%', color: '#fbbf24', size: 28 } },
-    { img: "/assets/memory10.jpg", caption: "You make everything feel so special 🌸", icon: Star, iconProps: { bottom: '12%', right: '15%', color: '#8b5cf6', size: 32 } },
-    { img: "/assets/memory11.jpg", caption: "My favorite person in the entire universe ❤️", icon: Heart, iconProps: { top: '10%', left: '5%', color: '#ec4899', size: 36 } },
-    { img: "/assets/memory12.jpg", caption: "You glow differently, you know that? ✨", icon: Sparkles, iconProps: { bottom: '15%', right: '10%', color: '#fbbf24', size: 26 } },
-    { img: "/assets/memory13.jpg", caption: "The reason behind all my happy vibes 😊", icon: Star, iconProps: { top: '15%', left: '15%', color: '#8b5cf6', size: 28 } },
-    { img: "/assets/memory14.jpg", caption: "I never want to forget this moment 💖", icon: Heart, iconProps: { bottom: '10%', left: '8%', color: '#ec4899', size: 30 } },
-    { img: "/assets/memory15.jpg", caption: "An absolute queen, today and always 👑", icon: Gift, iconProps: { top: '10%', right: '10%', color: '#fbbf24', size: 32 } },
-    { img: "/assets/memory16.jpg", caption: "Stunning beyond words! 💫", icon: Sparkles, iconProps: { bottom: '15%', left: '15%', color: '#8b5cf6', size: 34 } },
-    { img: "/assets/memory17.jpg", caption: "Here's to you, the best thing ever ❤️", icon: Heart, iconProps: { top: '5%', right: '5%', color: '#ec4899', size: 40 } },
-    { img: "/assets/memory18.jpg", caption: "Too gorgeous to handle 🔥", icon: Star, iconProps: { top: '10%', left: '10%', color: '#fbbf24', size: 32 } },
-    { img: "/assets/memory19.jpg", caption: "An actual angel ✨", icon: Sparkles, iconProps: { bottom: '10%', right: '15%', color: '#ec4899', size: 30 } }
+    { img: "/assets/memory1.jpg", caption: "The day my world got a little brighter ✨", icon: Sparkles, iconProps: { top: '5%', right: '8%', color: '#ec4899', size: 30 }, washi: "washi-pink", washibPos: { top: '-8px', left: '20%', width: '70px' }, bubble: "omg look at her!! 🥹", bubblePos: { top: '6%', left: '8%' }, sticker: "✨", stickerClass: "sticker-gold", stickerPos: { bottom: '8%', right: '6%' } },
+    { img: "/assets/memory2.jpg", caption: "That smile I could look at forever ❤️", icon: Heart, iconProps: { bottom: '10%', right: '12%', color: '#ec4899', size: 35 }, washi: "washi-lavender", washibPos: { top: '-8px', left: '30%', width: '60px' }, bubble: "favorite person 💖", bubblePos: { top: '5%', right: '5%' }, sticker: "💕", stickerClass: "sticker-pink", stickerPos: { bottom: '10%', left: '5%' } },
+    { img: "/assets/memory3.jpg", caption: "Effortlessly gorgeous, inside and out 🌸", icon: Star, iconProps: { top: '12%', left: '6%', color: '#fbbf24', size: 28 }, washi: "washi-mint", washibPos: { top: '-8px', left: '25%', width: '65px' }, bubble: "she's literally glowing!", bubblePos: { top: '5%', right: '6%' }, sticker: "🌸", stickerClass: "sticker-purple", stickerPos: { bottom: '8%', right: '5%' } },
+    { img: "/assets/memory4.jpg", caption: "You are the main character of my life 🌟", icon: Sparkles, iconProps: { bottom: '8%', left: '8%', color: '#8b5cf6', size: 32 }, washi: "washi-yellow", washibPos: { top: '-8px', left: '20%', width: '75px' }, bubble: "main character energy ⭐", bubblePos: { top: '6%', left: '8%' }, sticker: "👑", stickerClass: "sticker-gold", stickerPos: { bottom: '8%', right: '6%' } },
+    { img: "/assets/memory5.jpg", caption: "A moment I'll keep in my heart always 💖", icon: Heart, iconProps: { top: '8%', right: '10%', color: '#ec4899', size: 28 }, washi: "washi-stars", washibPos: { top: '-8px', left: '30%', width: '55px' }, bubble: "this moment 🥺💕", bubblePos: { top: '6%', left: '6%' }, sticker: "💗", stickerClass: "sticker-pink", stickerPos: { bottom: '10%', right: '5%' } },
+    { img: "/assets/memory6.jpg", caption: "Looking at you feels like magic ✨", icon: Sparkles, iconProps: { bottom: '12%', left: '8%', color: '#fbbf24', size: 26 }, washi: "washi-pink", washibPos: { top: '-8px', left: '22%', width: '68px' }, bubble: "pure magic ✨", bubblePos: { top: '5%', right: '8%' }, sticker: "🌟", stickerClass: "sticker-gold", stickerPos: { bottom: '8%', left: '6%' } },
+    { img: "/assets/memory7.jpg", caption: "The best part of every single day 🥰", icon: Star, iconProps: { top: '8%', left: '12%', color: '#8b5cf6', size: 30 }, washi: "washi-lavender", washibPos: { top: '-8px', left: '28%', width: '60px' }, bubble: "best day ever 🥰", bubblePos: { top: '6%', right: '6%' }, sticker: "💜", stickerClass: "sticker-purple", stickerPos: { bottom: '10%', right: '6%' } },
+    { img: "/assets/memory8.jpg", caption: "Just you being your absolute radiant self 💫", icon: Heart, iconProps: { bottom: '8%', right: '8%', color: '#ec4899', size: 28 }, washi: "washi-mint", washibPos: { top: '-8px', left: '20%', width: '72px' }, bubble: "radiant as always 💫", bubblePos: { top: '5%', left: '8%' }, sticker: "✨", stickerClass: "sticker-gold", stickerPos: { bottom: '8%', left: '5%' } },
+    { img: "/assets/memory9.jpg", caption: "God really took His time with you ✨", icon: Sparkles, iconProps: { top: '6%', right: '8%', color: '#fbbf24', size: 28 }, washi: "washi-yellow", washibPos: { top: '-8px', left: '26%', width: '62px' }, bubble: "a literal masterpiece 🎨", bubblePos: { top: '6%', left: '6%' }, sticker: "🌸", stickerClass: "sticker-pink", stickerPos: { bottom: '8%', right: '6%' } },
+    { img: "/assets/memory10.jpg", caption: "You make everything feel so special 🌸", icon: Star, iconProps: { bottom: '10%', right: '12%', color: '#8b5cf6', size: 32 }, washi: "washi-stars", washibPos: { top: '-8px', left: '22%', width: '70px' }, bubble: "she just makes it special 🌸", bubblePos: { top: '5%', left: '5%' }, sticker: "💫", stickerClass: "sticker-purple", stickerPos: { bottom: '8%', left: '6%' } },
+    { img: "/assets/memory11.jpg", caption: "My favorite person in the entire universe ❤️", icon: Heart, iconProps: { top: '8%', left: '5%', color: '#ec4899', size: 36 }, washi: "washi-pink", washibPos: { top: '-8px', left: '28%', width: '58px' }, bubble: "my absolute fav person 💝", bubblePos: { top: '6%', right: '5%' }, sticker: "❤️", stickerClass: "sticker-pink", stickerPos: { bottom: '10%', right: '6%' } },
+    { img: "/assets/memory12.jpg", caption: "You glow differently, you know that? ✨", icon: Sparkles, iconProps: { bottom: '12%', right: '8%', color: '#fbbf24', size: 26 }, washi: "washi-mint", washibPos: { top: '-8px', left: '24%', width: '66px' }, bubble: "she just glows different!!", bubblePos: { top: '5%', left: '8%' }, sticker: "⭐", stickerClass: "sticker-gold", stickerPos: { bottom: '8%', left: '5%' } },
+    { img: "/assets/memory13.jpg", caption: "The reason behind all my happy vibes 😊", icon: Star, iconProps: { top: '12%', left: '12%', color: '#8b5cf6', size: 28 }, washi: "washi-lavender", washibPos: { top: '-8px', left: '26%', width: '60px' }, bubble: "always spreading joy 😊", bubblePos: { top: '6%', right: '8%' }, sticker: "🎀", stickerClass: "sticker-purple", stickerPos: { bottom: '8%', right: '5%' } },
+    { img: "/assets/memory14.jpg", caption: "I never want to forget this moment 💖", icon: Heart, iconProps: { bottom: '8%', left: '6%', color: '#ec4899', size: 30 }, washi: "washi-yellow", washibPos: { top: '-8px', left: '30%', width: '55px' }, bubble: "saving this forever 📸", bubblePos: { top: '5%', right: '6%' }, sticker: "💖", stickerClass: "sticker-pink", stickerPos: { bottom: '8%', right: '6%' } },
+    { img: "/assets/memory15.jpg", caption: "An absolute queen, today and always 👑", icon: Gift, iconProps: { top: '8%', right: '8%', color: '#fbbf24', size: 32 }, washi: "washi-stars", washibPos: { top: '-8px', left: '22%', width: '70px' }, bubble: "the queen has arrived 👑", bubblePos: { top: '6%', left: '6%' }, sticker: "👑", stickerClass: "sticker-gold", stickerPos: { bottom: '10%', left: '5%' } },
+    { img: "/assets/memory16.jpg", caption: "Stunning beyond words! 💫", icon: Sparkles, iconProps: { bottom: '12%', left: '12%', color: '#8b5cf6', size: 34 }, washi: "washi-pink", washibPos: { top: '-8px', left: '28%', width: '62px' }, bubble: "no words needed 💫", bubblePos: { top: '5%', right: '8%' }, sticker: "✨", stickerClass: "sticker-purple", stickerPos: { bottom: '8%', right: '6%' } },
+    { img: "/assets/memory17.jpg", caption: "Here's to you, the best thing ever ❤️", icon: Heart, iconProps: { top: '5%', right: '5%', color: '#ec4899', size: 40 }, washi: "washi-mint", washibPos: { top: '-8px', left: '24%', width: '65px' }, bubble: "cheers to you! 🥂", bubblePos: { top: '6%', left: '6%' }, sticker: "💝", stickerClass: "sticker-pink", stickerPos: { bottom: '8%', left: '5%' } },
+    { img: "/assets/memory18.jpg", caption: "Too gorgeous to handle 🔥", icon: Star, iconProps: { top: '8%', left: '8%', color: '#fbbf24', size: 32 }, washi: "washi-yellow", washibPos: { top: '-8px', left: '26%', width: '60px' }, bubble: "literally too gorgeous 😍", bubblePos: { top: '6%', right: '6%' }, sticker: "🔥", stickerClass: "sticker-gold", stickerPos: { bottom: '8%', right: '5%' } },
+    { img: "/assets/memory19.jpg", caption: "An actual angel ✨", icon: Sparkles, iconProps: { bottom: '8%', right: '12%', color: '#ec4899', size: 30 }, washi: "washi-lavender", washibPos: { top: '-8px', left: '30%', width: '55px' }, bubble: "sent from heaven 👼", bubblePos: { top: '5%', left: '8%' }, sticker: "😇", stickerClass: "sticker-purple", stickerPos: { bottom: '8%', left: '6%' } }
   ];
 
   return (
     <motion.div className="scene-container" {...fadeIn}>
       <h2 className="title-gold" style={{ marginBottom: '2rem' }}>Flip the pages</h2>
       <HTMLFlipBook 
-        width={320} 
-        height={450} 
-        size="stretch"
-        minWidth={300}
-        maxWidth={400}
-        minHeight={450}
-        maxHeight={500}
+        width={bookWidth} 
+        height={bookHeight} 
+        size="fixed"
         showCover={true}
         className="book-container"
+        style={{ touchAction: 'pan-y' }}
       >
         {/* Cover */}
         <Page density="hard">
@@ -317,25 +334,55 @@ export function MemoryBookScene({ onNext }) {
         {/* Dynamic Pages */}
         {memories.map((mem, index) => {
           const Icon1 = mem.icon;
-          const Icon2 = index % 2 === 0 ? Heart : Sparkles;
           const rotate = index % 2 === 0 ? 2 : -2;
           return (
             <Page key={index}>
-              <Icon1 className="doodle" style={{ ...mem.iconProps, position: 'absolute' }} size={mem.iconProps.size} />
-              <Icon2 className="doodle" style={{ top: '15%', left: index % 2 === 0 ? '80%' : '10%', color: index % 2 === 0 ? '#fbbf24' : '#ec4899', position: 'absolute', opacity: 0.5, transform: 'rotate(15deg)' }} size={20} />
-              <motion.div 
-                className="polaroid" 
-                style={{ marginTop: '1.5rem', position: 'relative', zIndex: 1 }}
-                initial={{ rotate: rotate }}
-                whileHover={{ scale: 1.05, rotate: 0, zIndex: 10 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <img src={mem.img} alt={`Memory ${index + 1}`} style={{ height: '280px', objectFit: 'cover', objectPosition: 'top center' }} />
-                <p style={{ color: '#333', marginTop: '10px', fontFamily: "'Playfair Display', serif", fontSize: '1rem' }}>{mem.caption}</p>
-              </motion.div>
+              <div className="book-page-inner">
+                {/* Doodle icon */}
+                <Icon1 className="doodle" style={{ ...mem.iconProps, position: 'absolute' }} size={mem.iconProps.size} />
+                {/* Washi tape */}
+                <div className={`washi-tape ${mem.washi}`} style={{ ...mem.washibPos, position: 'absolute' }}></div>
+                {/* Speech bubble */}
+                <div className="speech-bubble" style={{ ...mem.bubblePos }}>{mem.bubble}</div>
+                {/* Sticker badge */}
+                <div className={`sticker-badge ${mem.stickerClass}`} style={{ ...mem.stickerPos }}>{mem.sticker}</div>
+                {/* Polaroid */}
+                <motion.div 
+                  className="polaroid" 
+                  style={{ marginTop: '1.5rem', position: 'relative', zIndex: 1 }}
+                  initial={{ rotate: rotate }}
+                  whileHover={{ scale: 1.05, rotate: 0, zIndex: 10, boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <img src={mem.img} alt={`Memory ${index + 1}`} style={{ height: '260px', objectFit: 'cover', objectPosition: 'top center' }} />
+                  <p style={{ color: '#333', marginTop: '8px', fontFamily: "'Dancing Script', cursive", fontSize: '0.95rem', textAlign: 'center' }}>{mem.caption}</p>
+                </motion.div>
+              </div>
             </Page>
           );
         })}
+
+        {/* Back Cover */}
+        <Page density="hard">
+          <div className="book-back-cover">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5 }}
+              style={{ position: 'relative', zIndex: 2, textAlign: 'center', padding: '2rem' }}
+            >
+              <Heart size={50} color="#ec4899" style={{ marginBottom: '1rem' }} />
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.4rem', color: '#fbbf24', marginBottom: '1rem' }}>
+                The End...
+              </h2>
+              <p style={{ fontFamily: "'Dancing Script', cursive", fontSize: '1.1rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.8 }}>
+                But just the beginning of another<br/>beautiful year with you 🌸
+              </p>
+              <p style={{ marginTop: '2rem', fontFamily: "'Dancing Script', cursive", fontSize: '1.4rem', color: '#ec4899' }}>Happy Birthday Akansha ❤️</p>
+              <button className="btn-primary" style={{ marginTop: '2rem', fontSize: '0.9rem' }} onClick={onNext}>Let's celebrate! 🎉</button>
+            </motion.div>
+          </div>
+        </Page>
 
         {/* Camera prompt */}
         <Page density="hard">
