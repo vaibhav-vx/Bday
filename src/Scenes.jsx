@@ -18,11 +18,97 @@ export function Welcome({ onNext }) {
         animate={{ scale: [1, 1.02, 1] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       >
-        <h1>A Surprise for You!</h1>
-        <p>Are you ready for something special?</p>
-        <button className="btn-primary" onClick={onNext}>Let's Go!</button>
+        <h1 style={{ fontSize: '3.5rem' }}>Hey Akansha...</h1>
+        <p style={{ fontSize: '1.4rem' }}>Turn up your volume, get comfortable, and tap the button when you're ready. 🤫💖</p>
+        <button className="btn-primary" onClick={onNext} style={{ marginTop: '1rem' }}>I'm Ready</button>
       </motion.div>
     </motion.div>
+  );
+}
+
+function ScratchCard({ children, onRevealed }) {
+  const canvasRef = useRef(null);
+  const [isRevealed, setIsRevealed] = useState(false);
+  const isDrawing = useRef(false);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = 350;
+    canvas.height = 350;
+    
+    // Fill with frost layer
+    ctx.fillStyle = '#cbd5e1';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.font = '24px Outfit';
+    ctx.fillStyle = '#334155';
+    ctx.textAlign = 'center';
+    ctx.fillText('Scratch to Reveal!', canvas.width / 2, canvas.height / 2);
+
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 40;
+    ctx.globalCompositeOperation = 'destination-out';
+  }, []);
+
+  const handlePointerDown = () => { isDrawing.current = true; };
+  const handlePointerUp = () => { isDrawing.current = false; checkReveal(); };
+  
+  const handlePointerMove = (e) => {
+    if (!isDrawing.current || isRevealed) return;
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    const ctx = canvas.getContext('2d');
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  };
+
+  const checkReveal = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+    let transparentCount = 0;
+    for (let i = 3; i < pixels.length; i += 4) {
+      if (pixels[i] < 10) transparentCount++;
+    }
+    const percent = transparentCount / (pixels.length / 4);
+    if (percent > 0.4 && !isRevealed) {
+      setIsRevealed(true);
+      onRevealed();
+    }
+  };
+
+  return (
+    <div style={{ position: 'relative', width: '350px', height: '350px', borderRadius: '50%', overflow: 'hidden' }}>
+      {children}
+      <AnimatePresence>
+        {!isRevealed && (
+          <motion.canvas
+            ref={canvasRef}
+            className="scratch-overlay"
+            onPointerDown={handlePointerDown}
+            onPointerUp={handlePointerUp}
+            onPointerMove={handlePointerMove}
+            onTouchStart={handlePointerDown}
+            onTouchEnd={handlePointerUp}
+            onTouchMove={handlePointerMove}
+            exit={{ opacity: 0, scale: 1.1 }}
+            transition={{ duration: 1 }}
+          />
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -30,6 +116,7 @@ export function CakeScene({ onNext }) {
   const [blown, setBlown] = useState(false);
   const [attempt, setAttempt] = useState(0); 
   const [countdown, setCountdown] = useState(null);
+  const [isRevealed, setIsRevealed] = useState(false);
   
   const startBlow = () => {
     setCountdown(3);
@@ -50,30 +137,31 @@ export function CakeScene({ onNext }) {
         setCountdown(null);
         const audio = new Audio('/assets/song.mp3');
         audio.play().catch(e => console.log("Audio play blocked", e));
-        setTimeout(onNext, 5000); 
+        setTimeout(onNext, 6000); 
       }
     }
   }, [countdown, attempt, onNext]);
 
   return (
     <motion.div className="scene-container" {...fadeIn}>
-      <div style={{ position: 'relative', width: '350px', height: '350px', marginBottom: '3rem' }}>
-        <motion.img 
-          src="/assets/cake.jpg" 
-          alt="Cake" 
-          style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%', boxShadow: '0 20px 40px rgba(0,0,0,0.5)', border: '4px solid rgba(255,255,255,0.1)' }}
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-        />
-        <div className="flame-wrapper">
-           {!blown && <div className="flame"></div>}
-           {blown && <div className="smoke"></div>}
-        </div>
+      <div style={{ marginBottom: '3rem' }}>
+        <ScratchCard onRevealed={() => setIsRevealed(true)}>
+          <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+            <motion.img 
+              src="/assets/cake.jpg" 
+              alt="Cake" 
+              style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%', border: '4px solid rgba(255,255,255,0.1)' }}
+            />
+            <div className="flame-wrapper">
+               {!blown && <div className="flame"></div>}
+               {blown && <div className="smoke"></div>}
+            </div>
+          </div>
+        </ScratchCard>
       </div>
       
-      {countdown === null && attempt === 0 && (
-        <motion.button className="btn-primary" onClick={startBlow} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+      {isRevealed && countdown === null && attempt === 0 && (
+        <motion.button className="btn-primary" onClick={startBlow} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           Make a Wish & Blow (3s)
         </motion.button>
       )}
@@ -142,13 +230,20 @@ export function EnvelopeScene({ onNext }) {
           style={{ position: 'absolute', pointerEvents: letterOut ? 'auto' : 'none' }}
         >
           <h2 style={{ color: '#ec4899', fontSize: '1.8rem', marginBottom: '1rem' }}>Happy Birthday Akansha!</h2>
-          <p style={{ color: '#555', textAlign: 'left', fontStyle: 'italic', fontSize: '1.1rem', flex: 1 }}>
-            Wishing you the happiest of birthdays! May this year bring you as much joy and laughter as you bring to everyone around you. Keep shining and never stop being the amazing person you are.
+          <p style={{ color: '#555', textAlign: 'left', fontStyle: 'italic', fontSize: '1.1rem', marginBottom: '1rem' }}>
+            There are some people in life that just make the world a little brighter just by being in it, and you are absolutely one of them.
+          </p>
+          <p style={{ color: '#555', textAlign: 'left', fontStyle: 'italic', fontSize: '1.1rem', marginBottom: '1rem' }}>
+            Wishing you the happiest of birthdays today! May this coming year bring you all the love, success, and endless laughter that you bring to everyone around you. Keep shining and never stop being the incredibly amazing person you are. 
+          </p>
+          <p style={{ color: '#555', textAlign: 'left', fontStyle: 'italic', fontSize: '1.1rem', marginBottom: '1.5rem' }}>
+            Enjoy your day to the absolute fullest!
           </p>
           <p style={{ color: '#555', textAlign: 'left', fontWeight: 'bold', fontSize: '1.1rem', width: '100%' }}>With lots of love,</p>
+          <p className="signature" style={{ width: '100%', textAlign: 'right' }}>Your Friend</p>
           
           {letterOut && (
-            <button className="btn-primary" style={{ marginTop: '1.5rem', padding: '0.8rem 1.5rem', fontSize: '1rem' }} onClick={onNext}>
+            <button className="btn-primary" style={{ marginTop: '1.5rem', padding: '0.8rem 1.5rem', fontSize: '1rem', flexShrink: 0 }} onClick={onNext}>
               Thanks A Lot
             </button>
           )}
@@ -237,6 +332,8 @@ export function CameraCaptureScene({ onNext, setCapturedImage }) {
   const canvasRef = useRef(null);
   const [stream, setStream] = useState(null);
   const [error, setError] = useState(null);
+  const [hasCaptured, setHasCaptured] = useState(false);
+  const [imgData, setImgData] = useState(null);
 
   useEffect(() => {
     async function setupCamera() {
@@ -267,27 +364,51 @@ export function CameraCaptureScene({ onNext, setCapturedImage }) {
       canvasRef.current.height = videoRef.current.videoHeight;
       context.drawImage(videoRef.current, 0, 0);
       const dataUrl = canvasRef.current.toDataURL('image/png');
+      
+      setImgData(dataUrl);
       setCapturedImage(dataUrl);
+      setHasCaptured(true);
       if (stream) stream.getTracks().forEach(track => track.stop());
-      onNext();
+
+      // Let the polaroid print animation play, then move on
+      setTimeout(() => onNext(), 3500);
     }
   };
 
   return (
-    <motion.div className="scene-container" {...fadeIn}>
-      <h2 className="title-gold">Smile! 📸</h2>
-      {error ? (
-        <div className="glass-panel" style={{ marginTop: '2rem' }}>
-          <p>{error}</p>
-          <button className="btn-ghost" style={{ padding: '0.8rem 1.5rem', borderRadius: '50px' }} onClick={() => { setCapturedImage("/assets/photo.jpg"); onNext(); }}>Skip / Use Placeholder</button>
-        </div>
-      ) : (
-        <div className="polaroid" style={{ transform: 'none', margin: '2rem 0', paddingBottom: '20px' }}>
-          <video ref={videoRef} autoPlay playsInline style={{ width: '100%', maxWidth: '400px', borderRadius: '5px' }}></video>
-          <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
-        </div>
-      )}
-      {!error && <button className="btn-primary" onClick={capture}>Capture Picture</button>}
+    <motion.div className="scene-container" {...fadeIn} style={{ overflow: 'hidden' }}>
+      <AnimatePresence>
+        {!hasCaptured ? (
+          <motion.div exit={{ opacity: 0, y: -50 }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <h2 className="title-gold">Smile! 📸</h2>
+            {error ? (
+              <div className="glass-panel" style={{ marginTop: '2rem' }}>
+                <p>{error}</p>
+                <button className="btn-ghost" style={{ padding: '0.8rem 1.5rem', borderRadius: '50px' }} onClick={() => { setCapturedImage("/assets/photo.jpg"); onNext(); }}>Skip / Use Placeholder</button>
+              </div>
+            ) : (
+              <div className="polaroid" style={{ transform: 'none', margin: '2rem 0', paddingBottom: '20px' }}>
+                <video ref={videoRef} autoPlay playsInline style={{ width: '100%', maxWidth: '400px', borderRadius: '5px' }}></video>
+                <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+              </div>
+            )}
+            {!error && <button className="btn-primary" onClick={capture}>Capture Picture</button>}
+          </motion.div>
+        ) : (
+          <motion.div 
+            initial={{ y: -300, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '2rem' }}
+          >
+            <div className="polaroid" style={{ transform: 'rotate(-2deg)' }}>
+              <img src={imgData} alt="Memory" style={{ width: '100%', maxWidth: '300px' }} />
+              <p style={{ color: '#333', marginTop: '10px', fontFamily: "'Playfair Display', serif" }}>Perfect!</p>
+            </div>
+            <p style={{ marginTop: '2rem', fontStyle: 'italic', color: '#fbbf24' }}>Printing memory...</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
@@ -392,11 +513,18 @@ export function FinalScene({ capturedImage }) {
 
   return (
     <motion.div className="scene-container" {...fadeIn}>
+      
+      {/* Floating Balloons */}
+      <div className="balloon" style={{ left: '10%', animationDelay: '0s', background: '#ec4899' }}></div>
+      <div className="balloon" style={{ left: '80%', animationDelay: '2s', background: '#8b5cf6' }}></div>
+      <div className="balloon" style={{ left: '25%', animationDelay: '4s', background: '#fbbf24' }}></div>
+      <div className="balloon" style={{ left: '70%', animationDelay: '1s', background: '#ec4899' }}></div>
+
       <motion.div 
         initial={{ y: 100, rotate: -5, opacity: 0 }}
         animate={{ y: 0, rotate: 0, opacity: 1 }}
         transition={{ type: 'spring', damping: 15, delay: 0.5 }}
-        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 10 }}
       >
         {capturedImage && (
           <div className="polaroid" style={{ transform: 'rotate(3deg)', marginBottom: '3rem' }}>
