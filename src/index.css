@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@700&display=swap');
 
 :root {
   --bg-dark: #0f0c29;
@@ -25,12 +25,6 @@ body {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-}
-
-@keyframes gradientBG {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 }
 
 #root {
@@ -84,8 +78,16 @@ h2 {
 p {
   font-size: 1.15rem;
   margin-bottom: 2rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   line-height: 1.6;
+}
+
+.signature {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2.5rem;
+  color: var(--accent-pink);
+  margin-top: 1rem;
+  transform: rotate(-5deg);
 }
 
 .btn-primary {
@@ -256,13 +258,17 @@ p {
   height: 480px;
   border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  padding: 2.5rem 2rem;
+  padding: 2.5rem 2.5rem;
   color: #333;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   overflow-y: auto;
+}
+
+.letter p {
+  color: #444;
 }
 
 /* Custom Scrollbar for Letter */
@@ -275,11 +281,6 @@ p {
 .letter::-webkit-scrollbar-thumb {
   background: rgba(0,0,0,0.2);
   border-radius: 10px;
-}
-
-.letter.out {
-  transform: translateY(-160px);
-  z-index: 5; /* Come to front when pulled out */
 }
 
 /* React Pageflip Book Styles */
@@ -342,3 +343,42 @@ p {
   color: #ec4899;
 }
 
+/* Scratch Card */
+.scratch-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 20;
+  cursor: crosshair;
+  border-radius: 50%; /* to match cake */
+}
+
+/* Balloons */
+.balloon {
+  position: absolute;
+  width: 60px;
+  height: 80px;
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+  background: rgba(236, 72, 153, 0.8);
+  bottom: -100px;
+  animation: floatUp 8s ease-in-out infinite;
+  box-shadow: inset -5px -5px 15px rgba(0,0,0,0.2);
+}
+
+.balloon::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 8px solid rgba(236, 72, 153, 0.8);
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) rotate(-5deg); }
+  50% { transform: translateY(-60vh) rotate(5deg); }
+  100% { transform: translateY(-120vh) rotate(-5deg); }
+}
