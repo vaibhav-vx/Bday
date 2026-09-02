@@ -44,7 +44,6 @@ body {
   perspective: 1000px;
 }
 
-/* Glassmorphism */
 .glass-panel {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(15px);
@@ -90,7 +89,6 @@ p {
   line-height: 1.6;
 }
 
-/* Premium Buttons */
 .btn-primary {
   background: linear-gradient(135deg, var(--accent-pink), #8b5cf6);
   color: white;
@@ -149,7 +147,7 @@ p {
   padding: 1rem;
 }
 
-/* Realistic Candle Flame */
+/* Flame */
 .flame-wrapper {
   position: absolute;
   top: 15%;
@@ -159,7 +157,6 @@ p {
   height: 60px;
   z-index: 10;
 }
-
 .flame {
   width: 100%;
   height: 100%;
@@ -169,7 +166,6 @@ p {
   filter: blur(2px) drop-shadow(0 0 20px #ff9900) drop-shadow(0 0 40px #ffaa00);
   transform-origin: bottom center;
 }
-
 @keyframes flicker {
   0% { transform: scale(1) rotate(-1deg); opacity: 0.9; }
   100% { transform: scale(1.05) rotate(1deg); opacity: 1; }
@@ -178,7 +174,6 @@ p {
   0% { transform: rotate(-3deg); }
   100% { transform: rotate(3deg); }
 }
-
 .smoke {
   width: 10px;
   height: 10px;
@@ -190,22 +185,45 @@ p {
   filter: blur(5px);
   animation: riseAndFade 3s ease-out forwards;
 }
-
 @keyframes riseAndFade {
   0% { opacity: 0.8; transform: translateX(-50%) translateY(0) scale(1); }
   50% { opacity: 0.4; transform: translateX(calc(-50% - 20px)) translateY(-100px) scale(3); }
   100% { opacity: 0; transform: translateX(calc(-50% + 20px)) translateY(-200px) scale(5); }
 }
 
-/* Envelope CSS */
-.envelope-wrapper {
-  width: 300px;
-  height: 200px;
-  background: #e2d1c3; /* Base color */
+/* ENVELOPE REDESIGN */
+.envelope-container {
   position: relative;
-  cursor: pointer;
-  border-radius: 5px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  width: 320px;
+  height: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1500px;
+  margin-top: 100px;
+}
+.envelope {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #c39a6a; /* Darker back part of envelope */
+  border-radius: 10px;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+}
+
+.envelope-front {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 160px solid #e1b382;
+  border-right: 160px solid #e1b382;
+  border-bottom: 110px solid #e5bd92;
+  border-top: 110px solid transparent;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: 0 0 10px 10px;
 }
 
 .envelope-flap {
@@ -214,81 +232,80 @@ p {
   left: 0;
   width: 0;
   height: 0;
-  border-left: 150px solid transparent;
-  border-right: 150px solid transparent;
-  border-top: 100px solid #d5c0b1;
-  transform-origin: top;
+  border-left: 160px solid transparent;
+  border-right: 160px solid transparent;
+  border-top: 120px solid #d4a373;
+  transform-origin: top center;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.8s;
   z-index: 4;
+  cursor: pointer;
 }
 
-.envelope-pocket {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 0;
-  border-left: 150px solid #ecdacb;
-  border-right: 150px solid #ecdacb;
-  border-bottom: 100px solid #e5cbb7;
-  z-index: 3;
+.envelope-flap.open {
+  transform: rotateX(180deg);
+  z-index: 1; /* Drop behind the letter after opening */
 }
 
 .letter {
   position: absolute;
   background: #fffdf8;
-  width: 260px;
-  height: 350px;
+  width: 280px;
+  height: 380px;
   left: 20px;
-  bottom: 0;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  padding: 2rem;
+  bottom: 10px; /* Inside the envelope initially */
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  padding: 2.5rem 2rem;
   color: #333;
-  z-index: 2;
-  font-family: 'Playfair Display', serif;
+  z-index: 2; /* Sandwiched between back and front */
+  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-/* 3D Book CSS */
-.book-wrapper {
-  width: 350px;
-  height: 450px;
-  position: relative;
-  perspective: 1500px;
-  cursor: pointer;
+.letter.out {
+  transform: translateY(-160px);
+  z-index: 5; /* Come to front when pulled out */
 }
 
-.page {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  right: 0;
-  transform-origin: left center;
-  background: #fdfaf6;
-  border-radius: 5px 15px 15px 5px;
-  box-shadow: inset 4px 0 10px rgba(0,0,0,0.1), 5px 5px 15px rgba(0,0,0,0.2);
+/* React Pageflip Book Styles */
+.book-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+  border-radius: 10px;
+}
+.book-page {
+  background-color: #fdfaf6;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  backface-visibility: hidden;
-  color: #333;
 }
 
-.page.cover {
-  background: linear-gradient(45deg, #1e1b4b, #312e81);
+.book-cover {
+  background: linear-gradient(45deg, #4338ca, #1e1b4b);
   color: white;
-  border: 1px solid #4338ca;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-right: 4px solid #1e1b4b;
 }
 
-.page.cover::after {
+.book-cover::after {
   content: '';
   position: absolute;
-  left: 10px;
+  left: 15px;
   top: 0;
   bottom: 0;
-  width: 5px;
+  width: 6px;
   background: rgba(255,255,255,0.1);
 }
 
@@ -296,30 +313,13 @@ p {
   background: white;
   padding: 10px 10px 40px 10px;
   box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-  transform: rotate(-2deg);
 }
 .polaroid img {
   width: 100%;
   height: auto;
 }
 
-/* Evasive Button */
 .evasive-btn {
   position: absolute;
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-/* Floating particles */
-.particle {
-  position: absolute;
-  border-radius: 50%;
-  background: white;
-  opacity: 0.5;
-  animation: float 10s infinite linear;
-}
-
-@keyframes float {
-  0% { transform: translateY(100vh) scale(0); opacity: 0; }
-  50% { opacity: 0.6; }
-  100% { transform: translateY(-100px) scale(1); opacity: 0; }
 }

@@ -14,7 +14,8 @@
     "framer-motion": "^13.2.0",
     "lucide-react": "^1.39.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "react-pageflip": "^2.0.3"
   },
   "devDependencies": {
     "@types/react": "^19.2.18",

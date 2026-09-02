@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, forwardRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { Camera, PartyPopper, Heart } from 'lucide-react';
+import HTMLFlipBook from 'react-pageflip';
 
 const fadeIn = {
   initial: { opacity: 0, y: 30 },
@@ -46,6 +47,7 @@ export function CakeScene({ onNext }) {
       } else if (attempt === 1) {
         setBlown(true);
         setAttempt(2);
+        setCountdown(null); // Ensure countdown doesn't render
         const audio = new Audio('/assets/song.mp3');
         audio.play().catch(e => console.log("Audio play blocked", e));
         setTimeout(onNext, 5000); 
@@ -76,7 +78,7 @@ export function CakeScene({ onNext }) {
         </motion.button>
       )}
       
-      {countdown !== null && (
+      {countdown !== null && countdown > 0 && (
         <motion.h2 className="title-gold" animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 1, repeat: Infinity }}>
           Blowing in... {countdown}
         </motion.h2>
@@ -89,7 +91,7 @@ export function CakeScene({ onNext }) {
         </motion.div>
       )}
 
-      {attempt === 2 && (
+      {attempt === 2 && countdown === null && (
         <motion.h2 className="title-gold" {...fadeIn}>Yay! Happy Birthday! 🎉</motion.h2>
       )}
     </motion.div>
@@ -98,102 +100,99 @@ export function CakeScene({ onNext }) {
 
 export function EnvelopeScene({ onNext }) {
   const [opened, setOpened] = useState(false);
+  const [letterOut, setLetterOut] = useState(false);
+
+  const handleOpen = () => {
+    if (opened) return;
+    setOpened(true);
+    // After flap opens, slide letter up
+    setTimeout(() => {
+      setLetterOut(true);
+    }, 500); 
+  };
 
   return (
-    <motion.div className="scene-container" {...fadeIn} style={{ perspective: '1000px' }}>
-      <div style={{ position: 'relative', height: '400px', width: '300px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end' }}>
-        
-        <motion.div 
-          className="envelope-wrapper"
-          onClick={() => setOpened(true)}
-          animate={opened ? { y: 150, opacity: 0 } : { y: 0, opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          <motion.div 
-            className="envelope-flap"
-            animate={opened ? { rotateX: 180, zIndex: 1 } : { rotateX: 0 }}
-            transition={{ duration: 0.5 }}
-          />
-          <div className="envelope-pocket" />
-        </motion.div>
-
-        <motion.div 
-          className="letter"
-          initial={{ y: 0, scale: 0.8, opacity: 0 }}
-          animate={opened ? { y: -50, scale: 1, opacity: 1, zIndex: 10 } : { y: 0, opacity: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          <h2 style={{ color: '#ec4899', fontSize: '1.8rem' }}>Happy Birthday Akansha!</h2>
-          <p style={{ color: '#555', textAlign: 'left', marginTop: '1rem', fontStyle: 'italic', fontSize: '1rem' }}>
-            Wishing you the happiest of birthdays! May this year bring you as much joy and laughter as you bring to everyone around you. Keep shining and never stop being the amazing person you are.
-          </p>
-          <p style={{ color: '#555', textAlign: 'left', fontWeight: 'bold', fontSize: '1rem' }}>With lots of love,</p>
+    <motion.div className="scene-container" {...fadeIn}>
+      <div className="envelope-container">
+        <div className="envelope">
+          {/* Back is just the background of envelope */}
+          <div className={`letter ${letterOut ? 'out' : ''}`}>
+             <h2 style={{ color: '#ec4899', fontSize: '1.6rem', marginBottom: '1rem' }}>Happy Birthday Akansha!</h2>
+             <p style={{ color: '#555', textAlign: 'left', fontStyle: 'italic', fontSize: '1rem' }}>
+              Wishing you the happiest of birthdays! May this year bring you as much joy and laughter as you bring to everyone around you. Keep shining and never stop being the amazing person you are.
+             </p>
+             <p style={{ color: '#555', textAlign: 'left', fontWeight: 'bold', fontSize: '1rem' }}>With lots of love,</p>
+             
+             {letterOut && (
+               <button className="btn-primary" style={{ marginTop: '1.5rem', padding: '0.6rem 1.2rem', fontSize: '1rem' }} onClick={onNext}>
+                 Thanks A Lot
+               </button>
+             )}
+          </div>
           
-          <button className="btn-primary" style={{ marginTop: '2rem', padding: '0.8rem 1.5rem', fontSize: '1rem' }} onClick={onNext}>
-            Thanks A Lot
-          </button>
-        </motion.div>
+          <div className="envelope-front"></div>
+          
+          <div className={`envelope-flap ${opened ? 'open' : ''}`} onClick={handleOpen}>
+             {!opened && <div style={{ position: 'absolute', top: '-60px', left: '-50px', width: '100px', textAlign: 'center', color: '#fff', fontSize: '1.2rem' }}>Open Me</div>}
+          </div>
+        </div>
       </div>
     </motion.div>
   );
 }
 
+const Page = forwardRef((props, ref) => {
+  return (
+    <div className="book-page" ref={ref} data-density={props.density || 'hard'}>
+      {props.children}
+    </div>
+  );
+});
+
 export function MemoryBookScene({ onNext }) {
-  const [page, setPage] = useState(0);
-  const totalPages = 4;
-
-  const nextPage = () => {
-    if (page < totalPages - 1) {
-      setPage(page + 1);
-    } else {
-      onNext();
-    }
-  };
-
   return (
     <motion.div className="scene-container" {...fadeIn}>
-      <div className="book-wrapper" onClick={nextPage}>
+      <h2 className="title-gold" style={{ marginBottom: '2rem' }}>Drag pages to flip</h2>
+      <HTMLFlipBook 
+        width={300} 
+        height={400} 
+        size="stretch"
+        minWidth={300}
+        maxWidth={400}
+        minHeight={400}
+        maxHeight={500}
+        showCover={true}
+        className="book-container"
+      >
+        <Page density="hard">
+           <div className="book-cover" style={{ width: '100%', height: '100%' }}>
+             <h1>Our Memories</h1>
+             <Heart size={48} color="#ec4899" style={{ marginTop: '2rem' }} />
+           </div>
+        </Page>
         
-        {/* Pages under current */}
-        <div className="page" style={{ zIndex: 1, background: '#f5f5f5' }}></div>
-        
-        {/* Current Page Content */}
-        <AnimatePresence>
-          {page === 0 && (
-            <motion.div key="cover" className="page cover" exit={{ rotateY: -180, opacity: 0 }} transition={{ duration: 0.6 }}>
-              <h1>Our Memories</h1>
-              <Heart size={48} color="#ec4899" style={{ marginTop: '2rem' }} />
-              <p style={{ marginTop: 'auto', fontSize: '0.9rem' }}>Tap to open</p>
-            </motion.div>
-          )}
+        <Page>
+          <div className="polaroid">
+            <img src="/assets/photo.jpg" alt="Memory" />
+            <p style={{ color: '#333', marginTop: '10px', fontFamily: "'Playfair Display', serif" }}>Good Times</p>
+          </div>
+        </Page>
 
-          {page === 1 && (
-            <motion.div key="page1" className="page" initial={{ rotateY: 180 }} animate={{ rotateY: 0 }} exit={{ rotateY: -180, opacity: 0 }} transition={{ duration: 0.6 }}>
-              <div className="polaroid">
-                <img src="/assets/photo.jpg" alt="Memory" />
-                <p style={{ color: '#333', marginTop: '10px', fontFamily: "'Playfair Display', serif" }}>Good Times</p>
-              </div>
-            </motion.div>
-          )}
+        <Page>
+          <div className="polaroid" style={{ transform: 'rotate(2deg)' }}>
+            <img src="/assets/photo.jpg" alt="Memory" />
+            <p style={{ color: '#333', marginTop: '10px', fontFamily: "'Playfair Display', serif" }}>Always smiling</p>
+          </div>
+        </Page>
 
-          {page === 2 && (
-            <motion.div key="page2" className="page" initial={{ rotateY: 180 }} animate={{ rotateY: 0 }} exit={{ rotateY: -180, opacity: 0 }} transition={{ duration: 0.6 }}>
-              <div className="polaroid" style={{ transform: 'rotate(2deg)' }}>
-                <img src="/assets/photo.jpg" alt="Memory" />
-                <p style={{ color: '#333', marginTop: '10px', fontFamily: "'Playfair Display', serif" }}>Always smiling</p>
-              </div>
-            </motion.div>
-          )}
-
-          {page === 3 && (
-            <motion.div key="page3" className="page" initial={{ rotateY: 180 }} animate={{ rotateY: 0 }} exit={{ rotateY: -180, opacity: 0 }} transition={{ duration: 0.6 }}>
-               <Camera size={64} style={{ margin: '0 auto 2rem', color: '#8b5cf6' }} />
-               <h2 style={{ color: '#333' }}>Let's take a memory picture</h2>
-               <p style={{ color: '#666' }}>(Tap to open camera)</p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+        <Page density="hard">
+          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+            <Camera size={64} style={{ margin: '0 auto 2rem', color: '#8b5cf6' }} />
+            <h2 style={{ color: '#333', textAlign: 'center' }}>Let's take a memory picture</h2>
+            <button className="btn-primary" style={{ marginTop: '2rem' }} onClick={onNext}>Open Camera</button>
+          </div>
+        </Page>
+      </HTMLFlipBook>
     </motion.div>
   );
 }
