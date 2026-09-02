@@ -299,7 +299,7 @@ export function MemoryBookScene({ onNext }) {
       >
         {/* Cover */}
         <Page density="hard">
-           <div className="book-cover" style={{ width: '100%', height: '100%', position: 'relative', backgroundImage: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url(/assets/cover.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+           <div className="book-cover" style={{ width: '100%', height: '100%', position: 'relative', backgroundImage: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url(/assets/cover.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
              <Star className="doodle" style={{ top: '10%', left: '10%', color: '#fbbf24', transform: 'rotate(-15deg)' }} size={32} />
              <Cake className="doodle" style={{ bottom: '15%', right: '15%', color: '#ec4899', transform: 'rotate(10deg)' }} size={40} />
              
