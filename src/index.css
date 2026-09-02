@@ -17,9 +17,8 @@
 
 body {
   font-family: 'Outfit', sans-serif;
-  background: linear-gradient(135deg, var(--bg-dark), var(--bg-mid), var(--bg-light));
-  background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite;
+  background: linear-gradient(rgba(10, 10, 20, 0.7), rgba(10, 10, 20, 0.7)), url('/assets/bg-room.jpg') no-repeat center center fixed;
+  background-size: cover;
   color: var(--text-color);
   min-height: 100vh;
   display: flex;
