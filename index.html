@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Birthday Akansha ✨</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+
+    <style>
+        :root {
+            --bg-deep: #0d0a1a;
+            --accent-purple: #c084fc;
+            --accent-rose: #f472b6;
+            --accent-gold: #fbbf24;
+            --text-light: #fff;
+            --text-dim: #a89bc2;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Sparkle Canvas */
+        #sparkle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Scene Container */
+        .scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            background: linear-gradient(135deg, #0d0a1a, #1a0f3a);
+        }
+
+        .scene.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Typography */
+        h1, h2, .fancy-text {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        
+        .script-text {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Global Button */
+        .btn {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-rose));
+            border: none;
+            padding: 12px 32px;
+            border-radius: 30px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(192, 132, 252, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 30px;
+            z-index: 10;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* SCENE 1: The Secret Door */
+        .gift-box {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, #2a1557, #4a1535);
+            border-radius: 20px;
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 0 30px rgba(192, 132, 252, 0.5);
+            position: relative;
+            cursor: pointer;
+            animation: pulse 2s infinite ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        
+        .gift-box::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            box-shadow: 0 0 60px var(--accent-purple);
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .s1-text {
+            font-size: 24px;
+            margin-bottom: 40px;
+            text-align: center;
+            opacity: 0;
+            color: var(--accent-rose);
+        }
+
+        /* SCENE 2 & 3 & 4: Character & Cake */
+        #scene2 { background: linear-gradient(135deg, #1a0a2e, #2d1a4a); }
+        
+        .character {
+            font-size: 120px; /* simple emoji placeholder, replaced by CSS later if needed */
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+            transform: translateX(-150vw);
+        }
+
+        .cake-container {
+            position: relative;
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(-50px);
+            font-size: 80px;
+        }
+        
+        .candle-flame {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15px;
+            height: 30px;
+            background: var(--accent-gold);
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 20px var(--accent-gold);
+            animation: flicker 0.1s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1); opacity: 0.9; }
+            100% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+        }
+
+        .roast-bubble {
+            position: absolute;
+            top: -80px;
+            background: white;
+            color: black;
+            padding: 15px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            opacity: 0;
+            transform: scale(0);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+        .roast-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: white transparent transparent transparent;
+        }
+
+        /* SCENE 5: The Letter */
+        #scene5 { background: linear-gradient(135deg, #0a0f2a, #1a1a4a); }
+        .envelope {
+            width: 250px;
+            height: 180px;
+            background: #fdf8f0;
+            border-radius: 10px;
+            position: relative;
+            transform: translateY(100vh);
+            cursor: pointer;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 125px solid transparent;
+            border-right: 125px solid transparent;
+            border-top: 100px solid #e8decb;
+            transform-origin: top;
+            z-index: 3;
+        }
+        .letter {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            height: 150px;
+            background: #fffefb;
+            z-index: 2;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            color: #3a2010;
+            transform-origin: bottom;
+            overflow: hidden;
+        }
+
+        /* SCENE 7: Photo Book */
+        #scene7 { background: linear-gradient(135deg, #1a0a14, #3a102a); perspective: 1000px; }
+        .book {
+            width: 300px;
+            height: 400px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #fdf8f0;
+            border-radius: 5px 15px 15px 5px;
+            box-shadow: inset 5px 0 20px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.3);
+            transform-origin: left;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            backface-visibility: hidden;
+        }
+        .polaroid {
+            width: 100%;
+            height: 250px;
+            background: #ddd;
+            border: 10px solid white;
+            border-bottom: 40px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #888;
+        }
+        .caption {
+            font-family: 'Dancing Script', cursive;
+            font-size: 22px;
+            color: var(--accent-rose);
+            text-align: center;
+        }
+
+        /* SCENE 10: Party Slide */
+        #scene10 { background: linear-gradient(135deg, #1a0a0a, #3a1515); }
+        .btn-no {
+            background: #444;
+            box-shadow: none;
+            position: absolute;
+            bottom: 20vh;
+            left: 30vw;
+        }
+        .btn-yes {
+            position: absolute;
+            bottom: 20vh;
+            right: 30vw;
+        }
+
+    </style>
+</head>
+<body>
+
+    <canvas id="sparkle-canvas"></canvas>
+
+    <!-- Audio Synthesis Fallback (Since no external MP3) -->
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playNote(freq, type, duration, delay) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime + delay);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(audioCtx.currentTime + delay);
+            osc.stop(audioCtx.currentTime + delay + duration);
+        }
+        function playBirthdaySong() {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            const notes = [
+                {f: 261.63, d: 0.3}, {f: 261.63, d: 0.1}, {f: 293.66, d: 0.4}, {f: 261.63, d: 0.4}, {f: 349.23, d: 0.4}, {f: 329.63, d: 0.8},
+                {f: 261.63, d: 0.3}, {f: 261.63, d: 0.1}, {f: 293.66, d: 0.4}, {f: 261.63, d: 0.4}, {f: 392.00, d: 0.4}, {f: 349.23, d: 0.8}
+            ];
+            let time = 0;
+            notes.forEach(n => {
+                playNote(n.f, 'triangle', n.d, time);
+                time += n.d + 0.05;
+            });
+        }
+    </script>
+
+    <!-- SCENE 1: Secret Door -->
+    <section class="scene active" id="scene1">
+        <div class="s1-text fancy-text" id="s1-title"></div>
+        <div class="gift-box" onclick="nextScene()">🎁</div>
+        <p style="margin-top:20px; color: var(--text-dim); font-size: 14px; opacity: 0.7;">Tap to open ✨</p>
+    </section>
+
+    <!-- SCENE 2, 3, 4: Akansha & Cake -->
+    <section class="scene" id="scene2">
+        <div class="character" id="akansha-char">👧🏻</div>
+        <div class="cake-container" id="cake">
+            🎂
+            <div class="candle-flame" id="candle"></div>
+            <div class="roast-bubble" id="roast">Aur Jor se Phuk 😂 Damm nhi hai kya?</div>
+        </div>
+        <div class="s1-text fancy-text" id="wish-text" style="margin-top:40px; opacity:1">Make a wish...</div>
+        <button class="btn" id="blow-btn" style="display:none;" onclick="blowAttempt1()">Blow! 💨</button>
+    </section>
+
+    <!-- SCENE 5: The Letter -->
+    <section class="scene" id="scene5">
+        <div class="envelope" id="env">
+            <div class="envelope-flap" id="flap"></div>
+            <div class="letter script-text" id="letter-content">
+                <h3>Dearest Akansha,</h3>
+                <p style="font-size:14px; margin-top:10px;">Tu itni baar meri baat sunti hai... aaj tera din hai. Grow up thoda, but not too much. 💛</p>
+                <p style="font-size:12px; margin-top:10px; color:#8b6914">— Tumhara favourite person</p>
+            </div>
+        </div>
+        <button class="btn" id="read-btn" style="margin-top:50px; opacity:0;" onclick="goToBook()">Thanks a Lot 💛</button>
+    </section>
+
+    <!-- SCENE 7: Photo Book -->
+    <section class="scene" id="scene7">
+        <div class="fancy-text" style="font-size:24px; margin-bottom: 20px; color:var(--accent-gold);">Our Memories</div>
+        <div class="book" id="photobook" onclick="nextPage()">
+            <div class="page" style="z-index: 3;">
+                <div class="polaroid">📸 1</div>
+                <div class="caption">When it all started...</div>
+                <div style="font-size: 10px; color: #aaa; margin-top: auto;">Tap to flip</div>
+            </div>
+            <div class="page" style="z-index: 2;">
+                <div class="polaroid">📸 2</div>
+                <div class="caption">Us being absolutely stupid 😂</div>
+            </div>
+            <div class="page" style="z-index: 1;">
+                <div class="polaroid">📸 3</div>
+                <div class="caption">Bas yahi chahiye 💛</div>
+            </div>
+        </div>
+        <button class="btn" id="finish-book" style="display:none;" onclick="goToParty()">Next ✨</button>
+    </section>
+
+    <!-- SCENE 10: Party Slide -->
+    <section class="scene" id="scene10">
+        <h2 class="fancy-text" style="color:var(--accent-gold); font-size: 32px; text-align: center; padding: 0 20px;">Party Deni Toh Padegi Hi! 😂🎉</h2>
+        <button class="btn btn-no" id="btn-no" onmouseover="runAway(this)" onclick="runAway(this)">No 😭</button>
+        <button class="btn btn-yes" onclick="finalCelebrate()">Yes 🥳</button>
+    </section>
+
+    <script>
+        // Sparkle Cursor
+        const canvas = document.getElementById('sparkle-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        const colors = ['#c084fc', '#f472b6', '#38bdf8', '#fbbf24', '#fff'];
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        function createParticle(x, y) {
+            particles.push({
+                x, y,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                size: Math.random() * 3 + 1,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                life: 1
+            });
+        }
+
+        function renderSparkles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= 0.02;
+                if (p.life <= 0) {
+                    particles.splice(index, 1);
+                } else {
+                    ctx.globalAlpha = p.life;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+            requestAnimationFrame(renderSparkles);
+        }
+        renderSparkles();
+
+        window.addEventListener('mousemove', (e) => createParticle(e.clientX, e.clientY));
+        window.addEventListener('touchmove', (e) => createParticle(e.touches[0].clientX, e.touches[0].clientY));
+
+        // Logic & GSAP
+        
+        // Init Scene 1
+        let titleText = "Psst... kuch khaas hai tere liye...";
+        let i = 0;
+        function typeWriter() {
+            if (i < titleText.length) {
+                document.getElementById("s1-title").innerHTML += titleText.charAt(i);
+                document.getElementById("s1-title").style.opacity = 1;
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        }
+        setTimeout(typeWriter, 500);
+
+        function switchScene(fromId, toId) {
+            document.getElementById(fromId).classList.remove('active');
+            document.getElementById(toId).classList.add('active');
+        }
+
+        function nextScene() {
+            // Audio init on first interaction
+            audioCtx.resume();
+            
+            // Explosion out of gift box
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: colors });
+            
+            setTimeout(() => {
+                switchScene('scene1', 'scene2');
+                startScene2();
+            }, 1000);
+        }
+
+        // Easter Egg
+        let taps = 0;
+        let tapTimer;
+        document.getElementById('akansha-char').addEventListener('click', () => {
+            taps++;
+            clearTimeout(tapTimer);
+            if(taps >= 5) {
+                alert("Bohot Pitega tu");
+                taps = 0;
+            }
+            tapTimer = setTimeout(() => { taps = 0; }, 2500);
+        });
+
+        function startScene2() {
+            gsap.to('#akansha-char', { x: 0, duration: 2, ease: "power2.out" });
+            setTimeout(() => {
+                gsap.to('#cake', { y: 0, opacity: 1, duration: 1, ease: "bounce.out" });
+                setTimeout(() => {
+                    document.getElementById('blow-btn').style.display = 'block';
+                }, 3000);
+            }, 2000);
+        }
+
+        let blowCount = 0;
+        function blowAttempt1() {
+            if (blowCount === 0) {
+                // First blow: Roast
+                document.getElementById('blow-btn').style.display = 'none';
+                gsap.to('#scene2', { x: 10, y: 10, yoyo: true, repeat: 5, duration: 0.1 });
+                gsap.to('#roast', { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" });
+                
+                setTimeout(() => {
+                    gsap.to('#roast', { scale: 0, opacity: 0, duration: 0.3 });
+                    document.getElementById('blow-btn').innerHTML = "Blow Again! 💨";
+                    document.getElementById('blow-btn').style.display = 'block';
+                    blowCount++;
+                }, 3000);
+            } else {
+                // Second blow: Success
+                document.getElementById('candle').style.display = 'none';
+                document.getElementById('wish-text').innerHTML = "Happy Birthday!! 🎉";
+                document.getElementById('blow-btn').style.display = 'none';
+                
+                playBirthdaySong();
+                
+                const end = Date.now() + (3 * 1000);
+                const colors = ['#c084fc', '#f472b6', '#38bdf8', '#fbbf24'];
+
+                (function frame() {
+                    confetti({
+                        particleCount: 5,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 },
+                        colors: colors
+                    });
+                    confetti({
+                        particleCount: 5,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 },
+                        colors: colors
+                    });
+
+                    if (Date.now() < end) {
+                        requestAnimationFrame(frame);
+                    }
+                }());
+                
+                setTimeout(() => {
+                    switchScene('scene2', 'scene5');
+                    startScene5();
+                }, 4000);
+            }
+        }
+
+        function startScene5() {
+            gsap.to('#env', {
+                y: 0,
+                duration: 2,
+                ease: "power2.out",
+                onComplete: () => {
+                    gsap.to('#flap', { rotateX: 180, duration: 1 });
+                    setTimeout(() => {
+                        gsap.to('#letter-content', { height: '350px', y: -50, duration: 1.5, ease: "power2.out" });
+                        gsap.to('#read-btn', { opacity: 1, duration: 1, delay: 1.5 });
+                    }, 1000);
+                }
+            });
+            // Float animation
+            gsap.to('#env', { y: "+=15", repeat: -1, yoyo: true, duration: 2, ease: "sine.inOut" });
+        }
+
+        function goToBook() {
+            switchScene('scene5', 'scene7');
+        }
+
+        let currentPage = 0;
+        const pages = document.querySelectorAll('.page');
+        function nextPage() {
+            if(currentPage < pages.length) {
+                gsap.to(pages[currentPage], { rotationY: -120, opacity: 0, duration: 0.8, ease: "power2.inOut" });
+                currentPage++;
+                if(currentPage === pages.length) {
+                    document.getElementById('finish-book').style.display = 'block';
+                }
+            }
+        }
+
+        function goToParty() {
+            switchScene('scene7', 'scene10');
+        }
+
+        let runCount = 0;
+        function runAway(btn) {
+            if(runCount < 3) {
+                const x = (Math.random() * 60) - 30; // vw
+                const y = (Math.random() * 60) - 30; // vh
+                gsap.to(btn, { x: x + 'vw', y: y + 'vh', duration: 0.3 });
+                runCount++;
+            } else {
+                gsap.to(btn, { opacity: 0, scale: 0, duration: 0.3 });
+                gsap.to('.btn-yes', { scale: 1.5, duration: 0.5, ease: "bounce.out" });
+            }
+        }
+
+        function finalCelebrate() {
+            confetti({ particleCount: 300, spread: 100, origin: { y: 0.5 } });
+            playBirthdaySong();
+            document.querySelector('#scene10 h2').innerHTML = "I knew it! Yaaay! 🥳🎉";
+            document.querySelector('.btn-yes').style.display = 'none';
+        }
+
+    </script>
+</body>
+</html>
