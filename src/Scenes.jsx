@@ -190,7 +190,6 @@ export function CakeScene({ onNext }) {
 export function EnvelopeScene({ onNext }) {
   const [opened, setOpened] = useState(false);
   const [letterOut, setLetterOut] = useState(false);
-  const isMobile = window.innerWidth < 600;
 
   const handleOpen = () => {
     if (opened) return;
@@ -200,57 +199,36 @@ export function EnvelopeScene({ onNext }) {
     }, 800); 
   };
 
-  // On mobile: letter appears below envelope (y-axis only)
-  // On desktop: letter slides to the right
-  const letterAnim = isMobile
-    ? (!opened ? { y: 0, scale: 0.85, opacity: 0 } : !letterOut ? { y: -120, scale: 0.85, opacity: 1 } : { y: 0, x: 0, scale: 1, opacity: 1, zIndex: 20 })
-    : (!opened ? { y: 0, scale: 0.8, opacity: 0 } : !letterOut ? { y: -150, scale: 0.8, opacity: 1, zIndex: 5 } : { y: -30, x: 120, scale: 1.1, opacity: 1, zIndex: 20 });
-
-  const envelopeAnim = isMobile
-    ? (letterOut ? { y: 80, scale: 0.7, opacity: 0.3 } : { y: 0, scale: 1, rotate: 0 })
-    : (letterOut ? { x: -180, scale: 0.8, rotate: -5, opacity: 0.4 } : { x: 0, scale: 1, rotate: 0 });
-
   return (
-    <motion.div className="scene-container" {...fadeIn} style={{ overflowY: 'auto', maxHeight: '100vh', padding: '1rem' }}>
-      <h2 className="title-gold" style={{ marginBottom: '1.5rem', textAlign: 'center', fontSize: 'clamp(1.2rem,5vw,2rem)' }}>You've got mail! 💌</h2>
-      <div className="envelope-scene-layout">
+    <motion.div className="scene-container" {...fadeIn}>
+      <div className="envelope-container">
         
-        {/* Envelope */}
+        {/* Envelope Side */}
         <motion.div 
           className="envelope-wrapper-2"
           onClick={handleOpen}
-          animate={envelopeAnim}
+          animate={letterOut ? { x: -180, scale: 0.8, rotate: -5, opacity: 0.4 } : { x: 0, scale: 1, rotate: 0 }}
           transition={{ duration: 1, ease: "easeInOut" }}
-          style={{ position: 'relative', zIndex: letterOut ? 1 : 10, flexShrink: 0 }}
+          style={{ position: 'relative', zIndex: letterOut ? 1 : 10 }}
         >
           <div className="envelope">
             <div className="envelope-front"></div>
-            <div className={`envelope-lining ${opened ? 'visible' : ''}`}></div>
-            <div className="envelope-stamp">
-              <span style={{ fontSize: '1.1rem' }}>🦉</span>
-              <span style={{ fontSize: '0.6rem' }}>⚡</span>
-              <span className="stamp-label">HOGWARTS</span>
-              <span className="stamp-label" style={{ fontSize: '0.38rem', letterSpacing: '0.02em' }}>OWL POST</span>
-            </div>
-            <div className="envelope-postmark">
-              <span>Sent With</span><span>Love ♡</span>
-            </div>
-            <div className="envelope-address">
-              <span className="to-label">To:</span>
-              <span className="to-name">Akansha 💕</span>
-            </div>
             <div className={`envelope-flap ${opened ? 'open' : ''}`}>
                {!opened && <div style={{ position: 'absolute', top: '-60px', left: '-50px', width: '100px', textAlign: 'center', color: '#fff', fontSize: '1.2rem' }}>Open Me</div>}
             </div>
           </div>
         </motion.div>
 
-        {/* Letter */}
+        {/* Letter Front */}
         <motion.div 
           className="letter"
-          animate={letterAnim}
+          animate={
+            !opened ? { y: 0, scale: 0.8, opacity: 0 } : 
+            !letterOut ? { y: -150, scale: 0.8, opacity: 1, zIndex: 5 } : 
+            { y: -30, x: 120, scale: 1.1, opacity: 1, zIndex: 20 }
+          }
           transition={{ duration: 1, ease: "easeInOut" }}
-          style={{ position: isMobile ? 'relative' : 'absolute', pointerEvents: letterOut ? 'auto' : 'none', marginTop: isMobile && letterOut ? '1rem' : 0 }}
+          style={{ position: 'absolute', pointerEvents: letterOut ? 'auto' : 'none' }}
         >
           <h2 style={{ color: '#ec4899', fontSize: '1.8rem', marginBottom: '1rem' }}>Happy Birthday Akansha!</h2>
           <p style={{ color: '#555', textAlign: 'left', fontStyle: 'italic', fontSize: '1.1rem', marginBottom: '1rem' }}>
@@ -287,44 +265,40 @@ const Page = forwardRef((props, ref) => {
 
 export function MemoryBookScene({ onNext }) {
   const memories = [
-    { img: "/assets/memory1.jpg",  caption: "The day my world got a little brighter ✨",         icon: Sparkles, iconProps: { top: '5%', right: '8%', color: '#ec4899', size: 30 },   washi: 'washi-pink',    washiPos: { top: '-8px', left: '18%' }, bubble: "omg look at her!! 🥹",            sticker: '✨', stickerPos: { bottom: '6%', right: '5%' } },
-    { img: "/assets/memory2.jpg",  caption: "That smile I could look at forever ❤️",              icon: Heart,    iconProps: { bottom: '10%', right: '12%', color: '#ec4899', size: 35 }, washi: 'washi-lavender', washiPos: { top: '-8px', left: '28%' }, bubble: "favorite person 💖",             sticker: '💕', stickerPos: { bottom: '10%', left: '5%' } },
-    { img: "/assets/memory3.jpg",  caption: "Effortlessly gorgeous, inside and out 🌸",          icon: Star,     iconProps: { top: '12%', left: '6%', color: '#fbbf24', size: 28 },    washi: 'washi-mint',    washiPos: { top: '-8px', left: '22%' }, bubble: "she's literally glowing!",        sticker: '🌸', stickerPos: { bottom: '8%', right: '5%' } },
-    { img: "/assets/memory4.jpg",  caption: "You are the main character of my life 🌟",           icon: Sparkles, iconProps: { bottom: '8%', left: '8%', color: '#8b5cf6', size: 32 },  washi: 'washi-yellow',  washiPos: { top: '-8px', left: '20%' }, bubble: "main character energy ⭐",         sticker: '👑', stickerPos: { bottom: '8%', right: '6%' } },
-    { img: "/assets/memory5.jpg",  caption: "A moment I'll keep in my heart always 💖",          icon: Heart,    iconProps: { top: '8%', right: '10%', color: '#ec4899', size: 28 },   washi: 'washi-stars',   washiPos: { top: '-8px', left: '30%' }, bubble: "this moment 🥺💕",               sticker: '💗', stickerPos: { bottom: '10%', right: '5%' } },
-    { img: "/assets/memory6.jpg",  caption: "Looking at you feels like magic ✨",                 icon: Sparkles, iconProps: { bottom: '12%', left: '8%', color: '#fbbf24', size: 26 }, washi: 'washi-pink',    washiPos: { top: '-8px', left: '22%' }, bubble: "pure magic ✨",                   sticker: '🌟', stickerPos: { bottom: '8%', left: '6%' } },
-    { img: "/assets/memory7.jpg",  caption: "The best part of every single day 🥰",               icon: Star,     iconProps: { top: '8%', left: '12%', color: '#8b5cf6', size: 30 },   washi: 'washi-lavender', washiPos: { top: '-8px', left: '26%' }, bubble: "best day ever 🥰",               sticker: '💜', stickerPos: { bottom: '10%', right: '6%' } },
-    { img: "/assets/memory8.jpg",  caption: "Just you being your absolute radiant self 💫",       icon: Heart,    iconProps: { bottom: '8%', right: '8%', color: '#ec4899', size: 28 },  washi: 'washi-mint',    washiPos: { top: '-8px', left: '20%' }, bubble: "radiant as always 💫",           sticker: '✨', stickerPos: { bottom: '8%', left: '5%' } },
-    { img: "/assets/memory9.jpg",  caption: "God really took His time with you ✨",               icon: Sparkles, iconProps: { top: '6%', right: '8%', color: '#fbbf24', size: 28 },   washi: 'washi-yellow',  washiPos: { top: '-8px', left: '24%' }, bubble: "a literal masterpiece 🎨",       sticker: '🌸', stickerPos: { bottom: '8%', right: '6%' } },
-    { img: "/assets/memory10.jpg", caption: "You make everything feel so special 🌸",             icon: Star,     iconProps: { bottom: '10%', right: '12%', color: '#8b5cf6', size: 32 }, washi: 'washi-stars',   washiPos: { top: '-8px', left: '22%' }, bubble: "she just makes it special 🌸",    sticker: '💫', stickerPos: { bottom: '8%', left: '6%' } },
-    { img: "/assets/memory11.jpg", caption: "My favorite person in the entire universe ❤️",        icon: Heart,    iconProps: { top: '8%', left: '5%', color: '#ec4899', size: 36 },    washi: 'washi-pink',    washiPos: { top: '-8px', left: '28%' }, bubble: "my absolute fav person 💝",      sticker: '❤️', stickerPos: { bottom: '10%', right: '6%' } },
-    { img: "/assets/memory12.jpg", caption: "You glow differently, you know that? ✨",             icon: Sparkles, iconProps: { bottom: '12%', right: '8%', color: '#fbbf24', size: 26 }, washi: 'washi-mint',    washiPos: { top: '-8px', left: '24%' }, bubble: "she just glows different!!",     sticker: '⭐', stickerPos: { bottom: '8%', left: '5%' } },
-    { img: "/assets/memory13.jpg", caption: "The reason behind all my happy vibes 😊",             icon: Star,     iconProps: { top: '12%', left: '12%', color: '#8b5cf6', size: 28 },  washi: 'washi-lavender', washiPos: { top: '-8px', left: '26%' }, bubble: "always spreading joy 😊",        sticker: '🎀', stickerPos: { bottom: '8%', right: '5%' } },
-    { img: "/assets/memory14.jpg", caption: "I never want to forget this moment 💖",               icon: Heart,    iconProps: { bottom: '8%', left: '6%', color: '#ec4899', size: 30 },  washi: 'washi-yellow',  washiPos: { top: '-8px', left: '30%' }, bubble: "saving this forever 📸",         sticker: '💖', stickerPos: { bottom: '8%', right: '6%' } },
-    { img: "/assets/memory15.jpg", caption: "An absolute queen, today and always 👑",              icon: Gift,     iconProps: { top: '8%', right: '8%', color: '#fbbf24', size: 32 },   washi: 'washi-stars',   washiPos: { top: '-8px', left: '22%' }, bubble: "the queen has arrived 👑",       sticker: '👑', stickerPos: { bottom: '10%', left: '5%' } },
-    { img: "/assets/memory16.jpg", caption: "Stunning beyond words! 💫",                           icon: Sparkles, iconProps: { bottom: '12%', left: '12%', color: '#8b5cf6', size: 34 }, washi: 'washi-pink',    washiPos: { top: '-8px', left: '28%' }, bubble: "no words needed 💫",             sticker: '✨', stickerPos: { bottom: '8%', right: '6%' } },
-    { img: "/assets/memory17.jpg", caption: "Here's to you, the best thing ever ❤️",              icon: Heart,    iconProps: { top: '5%', right: '5%', color: '#ec4899', size: 40 },   washi: 'washi-mint',    washiPos: { top: '-8px', left: '24%' }, bubble: "cheers to you! 🥂",             sticker: '💝', stickerPos: { bottom: '8%', left: '5%' } },
-    { img: "/assets/memory18.jpg", caption: "Too gorgeous to handle 🔥",                           icon: Star,     iconProps: { top: '8%', left: '8%', color: '#fbbf24', size: 32 },    washi: 'washi-yellow',  washiPos: { top: '-8px', left: '26%' }, bubble: "literally too gorgeous 😍",     sticker: '🔥', stickerPos: { bottom: '8%', right: '5%' } },
-    { img: "/assets/memory19.jpg", caption: "An actual angel ✨",                                   icon: Sparkles, iconProps: { bottom: '8%', right: '12%', color: '#ec4899', size: 30 }, washi: 'washi-lavender', washiPos: { top: '-8px', left: '30%' }, bubble: "sent from heaven 👼",           sticker: '😇', stickerPos: { bottom: '8%', left: '6%' } }
+    { img: "/assets/memory1.jpg", caption: "The day my world got a little brighter ✨", icon: Sparkles, iconProps: { top: '5%', right: '10%', color: '#ec4899', size: 30 } },
+    { img: "/assets/memory2.jpg", caption: "That smile I could look at forever ❤️", icon: Heart, iconProps: { bottom: '10%', right: '15%', color: '#ec4899', size: 35 } },
+    { img: "/assets/memory3.jpg", caption: "Effortlessly gorgeous, inside and out 🌸", icon: Star, iconProps: { top: '15%', left: '8%', color: '#fbbf24', size: 28 } },
+    { img: "/assets/memory4.jpg", caption: "You are the main character of my life 🌟", icon: Sparkles, iconProps: { bottom: '5%', left: '10%', color: '#8b5cf6', size: 32 } },
+    { img: "/assets/memory5.jpg", caption: "A moment I'll keep in my heart always 💖", icon: Heart, iconProps: { top: '10%', right: '12%', color: '#ec4899', size: 28 } },
+    { img: "/assets/memory6.jpg", caption: "Looking at you feels like magic ✨", icon: Sparkles, iconProps: { bottom: '15%', left: '10%', color: '#fbbf24', size: 26 } },
+    { img: "/assets/memory7.jpg", caption: "The best part of every single day 🥰", icon: Star, iconProps: { top: '8%', left: '15%', color: '#8b5cf6', size: 30 } },
+    { img: "/assets/memory8.jpg", caption: "Just you being your absolute radiant self 💫", icon: Heart, iconProps: { bottom: '10%', right: '8%', color: '#ec4899', size: 28 } },
+    { img: "/assets/memory9.jpg", caption: "God really took His time with you ✨", icon: Sparkles, iconProps: { top: '5%', right: '10%', color: '#fbbf24', size: 28 } },
+    { img: "/assets/memory10.jpg", caption: "You make everything feel so special 🌸", icon: Star, iconProps: { bottom: '12%', right: '15%', color: '#8b5cf6', size: 32 } },
+    { img: "/assets/memory11.jpg", caption: "My favorite person in the entire universe ❤️", icon: Heart, iconProps: { top: '10%', left: '5%', color: '#ec4899', size: 36 } },
+    { img: "/assets/memory12.jpg", caption: "You glow differently, you know that? ✨", icon: Sparkles, iconProps: { bottom: '15%', right: '10%', color: '#fbbf24', size: 26 } },
+    { img: "/assets/memory13.jpg", caption: "The reason behind all my happy vibes 😊", icon: Star, iconProps: { top: '15%', left: '15%', color: '#8b5cf6', size: 28 } },
+    { img: "/assets/memory14.jpg", caption: "I never want to forget this moment 💖", icon: Heart, iconProps: { bottom: '10%', left: '8%', color: '#ec4899', size: 30 } },
+    { img: "/assets/memory15.jpg", caption: "An absolute queen, today and always 👑", icon: Gift, iconProps: { top: '10%', right: '10%', color: '#fbbf24', size: 32 } },
+    { img: "/assets/memory16.jpg", caption: "Stunning beyond words! 💫", icon: Sparkles, iconProps: { bottom: '15%', left: '15%', color: '#8b5cf6', size: 34 } },
+    { img: "/assets/memory17.jpg", caption: "Here's to you, the best thing ever ❤️", icon: Heart, iconProps: { top: '5%', right: '5%', color: '#ec4899', size: 40 } },
+    { img: "/assets/memory18.jpg", caption: "Too gorgeous to handle 🔥", icon: Star, iconProps: { top: '10%', left: '10%', color: '#fbbf24', size: 32 } },
+    { img: "/assets/memory19.jpg", caption: "An actual angel ✨", icon: Sparkles, iconProps: { bottom: '10%', right: '15%', color: '#ec4899', size: 30 } }
   ];
 
-  const vw = Math.min(window.innerWidth, 500);
-  const bookW = Math.max(Math.floor(vw * 0.44), 150);
-  const bookH = Math.floor(bookW * 1.42);
-  const isMobile = window.innerWidth < 600;
-
   return (
-    <motion.div className="scene-container" {...fadeIn} style={{ overflowY: 'auto', maxHeight: '100vh', paddingBottom: '2rem' }}>
-      <h2 className="title-gold" style={{ marginBottom: '1rem', fontSize: 'clamp(1rem,5vw,1.8rem)', textAlign: 'center' }}>Flip the pages</h2>
+    <motion.div className="scene-container" {...fadeIn}>
+      <h2 className="title-gold" style={{ marginBottom: '2rem' }}>Flip the pages</h2>
       <HTMLFlipBook 
-        width={bookW}
-        height={bookH}
-        size="fixed"
+        width={320} 
+        height={450} 
+        size="stretch"
+        minWidth={300}
+        maxWidth={400}
+        minHeight={450}
+        maxHeight={500}
         showCover={true}
-        mobileScrollSupport={true}
         className="book-container"
-        style={{ touchAction: 'pan-y' }}
-        useMouseEvents={!isMobile}
       >
         {/* Cover */}
         <Page density="hard">
@@ -343,33 +317,12 @@ export function MemoryBookScene({ onNext }) {
         {/* Dynamic Pages */}
         {memories.map((mem, index) => {
           const Icon1 = mem.icon;
+          const Icon2 = index % 2 === 0 ? Heart : Sparkles;
           const rotate = index % 2 === 0 ? 2 : -2;
-          const arrowDir = index % 2 === 0 ? 1 : -1;
           return (
             <Page key={index}>
-              {/* Themed doodle icon */}
               <Icon1 className="doodle" style={{ ...mem.iconProps, position: 'absolute' }} size={mem.iconProps.size} />
-
-              {/* Washi tape strip */}
-              <div className={`washi-tape ${mem.washi}`} style={{ position: 'absolute', ...mem.washiPos }} />
-
-              {/* Handwritten SVG arrow pointing at photo */}
-              <svg style={{ position: 'absolute', top: '22%', left: arrowDir > 0 ? '5%' : '75%', opacity: 0.5, transform: arrowDir > 0 ? 'scaleX(1)' : 'scaleX(-1)' }} width="40" height="40" viewBox="0 0 40 40" fill="none">
-                <path d="M5 35 Q15 10 35 5" stroke="#ec4899" strokeWidth="2" strokeLinecap="round" fill="none"/>
-                <path d="M30 2 L35 5 L31 9" stroke="#ec4899" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-              </svg>
-
-              {/* Speech bubble callout */}
-              <div className="speech-bubble" style={{ position: 'absolute', top: '10%', left: arrowDir > 0 ? '5%' : 'auto', right: arrowDir < 0 ? '5%' : 'auto' }}>
-                {mem.bubble}
-              </div>
-
-              {/* Sticker badge */}
-              <div className="sticker-badge" style={{ position: 'absolute', fontSize: '1.4rem', ...mem.stickerPos, filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}>
-                {mem.sticker}
-              </div>
-
-              {/* Photo polaroid */}
+              <Icon2 className="doodle" style={{ top: '15%', left: index % 2 === 0 ? '80%' : '10%', color: index % 2 === 0 ? '#fbbf24' : '#ec4899', position: 'absolute', opacity: 0.5, transform: 'rotate(15deg)' }} size={20} />
               <motion.div 
                 className="polaroid" 
                 style={{ marginTop: '1.5rem', position: 'relative', zIndex: 1 }}
@@ -377,25 +330,12 @@ export function MemoryBookScene({ onNext }) {
                 whileHover={{ scale: 1.05, rotate: 0, zIndex: 10 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <img src={mem.img} alt={`Memory ${index + 1}`} style={{ height: '260px', objectFit: 'cover', objectPosition: 'top center' }} />
-                <p style={{ color: '#333', marginTop: '8px', fontFamily: "'Dancing Script', cursive", fontSize: '1rem', textAlign: 'center' }}>{mem.caption}</p>
+                <img src={mem.img} alt={`Memory ${index + 1}`} style={{ height: '280px', objectFit: 'cover', objectPosition: 'top center' }} />
+                <p style={{ color: '#333', marginTop: '10px', fontFamily: "'Playfair Display', serif", fontSize: '1rem' }}>{mem.caption}</p>
               </motion.div>
             </Page>
           );
         })}
-
-        {/* Back Cover */}
-        <Page density="hard">
-          <div style={{ width: '100%', height: '100%', background: 'linear-gradient(160deg,#1e1b4b,#4c1d95)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '0.8rem', padding: '2rem', boxSizing: 'border-box' }}>
-            <div style={{ border: '2px double #fbbf24', borderRadius: '8px', padding: '1.5rem', textAlign: 'center', width: '100%', boxSizing: 'border-box' }}>
-              <Heart size={40} color="#ec4899" style={{ marginBottom: '0.8rem' }} />
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.3rem', color: '#fbbf24', marginBottom: '0.8rem' }}>The End…</h2>
-              <p style={{ fontFamily: "'Dancing Script', cursive", fontSize: '1rem', color: 'rgba(255,255,255,0.85)', lineHeight: 1.8 }}>But just the beginning of another beautiful year with you 🌸</p>
-              <p style={{ marginTop: '1rem', fontFamily: "'Dancing Script', cursive", fontSize: '1.3rem', color: '#ec4899' }}>Happy Birthday Akansha ❤️</p>
-            </div>
-            <button className="btn-primary" style={{ marginTop: '1rem', fontSize: '0.9rem' }} onClick={onNext}>Let's celebrate! 🎉</button>
-          </div>
-        </Page>
 
         {/* Camera prompt */}
         <Page density="hard">
