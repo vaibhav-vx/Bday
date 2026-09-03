@@ -248,7 +248,20 @@ export function MemoryBookScene({ onNext }) {
       <h2 className="title-gold" style={{ marginBottom:"1.5rem" }}>Flip the pages</h2>
       <div className="book-wrapper">
         <div className="book-spine"><span className="spine-title">AKANSHA MEMORIES</span></div>
-        <HTMLFlipBook width={420} height={590} size="stretch" minWidth={400} maxWidth={500} minHeight={560} maxHeight={640} showCover={true} className="book-container">
+        <HTMLFlipBook
+          width={430}
+          height={580}
+          size="fixed"
+          minWidth={430}
+          maxWidth={430}
+          minHeight={580}
+          maxHeight={580}
+          showCover={true}
+          usePortrait={false}
+          flippingTime={800}
+          className="book-container"
+          style={{ boxShadow:"0 30px 70px rgba(0,0,0,0.7)" }}
+        >
           <Page density="hard">
             <div className="book-cover" style={{ width:"100%", height:"100%", position:"relative" }}>
               <div className="cover-frame">
@@ -390,9 +403,9 @@ export function PartyQuestionScene({ onNext }) {
   );
 }
 
-export function FinalScene({ capturedImage }) {
+export function FinalScene({ capturedImage, onNext }) {
   useEffect(() => {
-    const end = Date.now() + 5000;
+    const end = Date.now() + 6000;
     const frame = () => {
       confetti({ particleCount:8, angle:60, spread:70, origin:{ x:0 }, colors:["#ec4899","#8b5cf6","#fbbf24"] });
       confetti({ particleCount:8, angle:120, spread:70, origin:{ x:1 }, colors:["#ec4899","#8b5cf6","#fbbf24"] });
@@ -402,18 +415,55 @@ export function FinalScene({ capturedImage }) {
   }, []);
   return (
     <motion.div className="scene-container" {...fadeIn}>
-      <div className="balloon" style={{ left:"10%", animationDelay:"0s", background:"#ec4899" }}></div>
-      <div className="balloon" style={{ left:"80%", animationDelay:"2s", background:"#8b5cf6" }}></div>
-      <div className="balloon" style={{ left:"25%", animationDelay:"4s", background:"#fbbf24" }}></div>
-      <div className="balloon" style={{ left:"70%", animationDelay:"1s", background:"#ec4899" }}></div>
-      <motion.div initial={{ y:100, rotate:-5, opacity:0 }} animate={{ y:0, rotate:0, opacity:1 }} transition={{ type:"spring", damping:15, delay:0.5 }} style={{ display:"flex", flexDirection:"column", alignItems:"center", zIndex:10 }}>
+      <div className="balloon" style={{ left:"8%",  animationDelay:"0s",  background:"#ec4899" }}></div>
+      <div className="balloon" style={{ left:"82%", animationDelay:"2s",  background:"#8b5cf6" }}></div>
+      <div className="balloon" style={{ left:"22%", animationDelay:"4s",  background:"#fbbf24" }}></div>
+      <div className="balloon" style={{ left:"72%", animationDelay:"1s",  background:"#ec4899" }}></div>
+      <div className="balloon" style={{ left:"50%", animationDelay:"3s",  background:"#8b5cf6" }}></div>
+
+      <motion.div
+        initial={{ y:100, rotate:-5, opacity:0 }}
+        animate={{ y:0, rotate:0, opacity:1 }}
+        transition={{ type:"spring", damping:15, delay:0.5 }}
+        style={{ display:"flex", flexDirection:"column", alignItems:"center", zIndex:10, textAlign:"center" }}
+      >
         {capturedImage && (
-          <div className="polaroid" style={{ transform:"rotate(3deg)", marginBottom:"3rem" }}>
-            <img src={capturedImage} alt="Memory" style={{ width:"100%", maxWidth:"350px" }} />
-            <p style={{ color:"#333", marginTop:"10px", fontFamily:"'Kalam',cursive" }}>Beautiful Memory</p>
+          <div className="polaroid" style={{ transform:"rotate(3deg)", marginBottom:"2.5rem" }}>
+            <img src={capturedImage} alt="Memory" style={{ width:"100%", maxWidth:"300px" }} />
+            <p style={{ color:"#333", marginTop:"10px", fontFamily:"'Kalam',cursive" }}>Beautiful Memory 📸</p>
           </div>
         )}
-        <motion.h1 className="title-gold" animate={{ scale:[1,1.05,1] }} transition={{ duration:2, repeat:Infinity }} style={{ fontSize:"4rem", textShadow:"0 5px 15px rgba(251,191,36,0.4)" }}>Happy Birthday Akansha!</motion.h1>
+
+        <motion.h1
+          className="title-gold"
+          animate={{ scale:[1,1.06,1] }}
+          transition={{ duration:2.5, repeat:Infinity }}
+          style={{ fontSize:"4.5rem", textShadow:"0 5px 20px rgba(251,191,36,0.5)" }}
+        >
+          Happy Birthday Akansha! 🎂
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity:0 }}
+          animate={{ opacity:1 }}
+          transition={{ delay:1.5 }}
+          style={{ fontSize:"1.3rem", color:"rgba(255,255,255,0.8)", marginTop:"0.5rem" }}
+        >
+          Wishing you a year as magical as you are ✨
+        </motion.p>
+
+        {/* Button to go to constellation finale */}
+        <motion.button
+          className="btn-primary"
+          onClick={onNext}
+          initial={{ opacity:0, scale:0.8 }}
+          animate={{ opacity:1, scale:1 }}
+          transition={{ delay:3, type:"spring" }}
+          style={{ marginTop:"2.5rem", fontSize:"1.2rem", padding:"1.1rem 3rem" }}
+          whileHover={{ scale:1.08 }}
+        >
+          ✨ One Last Magic Moment
+        </motion.button>
       </motion.div>
     </motion.div>
   );
@@ -433,92 +483,228 @@ export function ConstellationScene({ onNext }) {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     const W = canvas.width = window.innerWidth;
     const H = canvas.height = window.innerHeight;
 
-    const bgStars = Array.from({ length: 250 }, () => ({
-      x: Math.random()*W, y: Math.random()*H,
-      r: Math.random()*1.5+0.3, alpha: Math.random(),
-      speed: Math.random()*0.006+0.002,
+    // ── 1. Twinkling background stars ────────────────────────────────
+    const bgStars = Array.from({ length: 300 }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      r: Math.random() * 1.6 + 0.2,
+      alpha: Math.random(),
+      dAlpha: (Math.random() * 0.008 + 0.002) * (Math.random() > 0.5 ? 1 : -1),
     }));
 
-    const name = "AKANSHA";
-    const scale = 30;
-    let allStars = [], allConnections = [];
+    // ── 2. Build constellation target points ─────────────────────────
+    const name = 'AKANSHA';
+    const scale = 34;
+    let rawStars = [], allConnections = [];
     let xOff = 0;
-    name.split("").forEach((ch, li) => {
-      const pts = LETTER_SEGS[ch] || LETTER_SEGS["A"];
-      const ls = pts.map(([px,py], si) => ({ id:`${li}-${si}`, x:(xOff+px)*scale, y:py*scale }));
-      for (let i=0; i<pts.length-1; i++) allConnections.push([`${li}-${i}`, `${li}-${i+1}`]);
+    name.split('').forEach((ch, li) => {
+      const pts = LETTER_SEGS[ch] || LETTER_SEGS['A'];
+      const ls = pts.map(([px, py], si) => ({ id: `${li}-${si}`, tx: (xOff + px) * scale, ty: py * scale }));
+      for (let i = 0; i < pts.length - 1; i++) allConnections.push([`${li}-${i}`, `${li}-${i + 1}`]);
       xOff += 5;
-      allStars.push(...ls);
+      rawStars.push(...ls);
     });
 
-    const minX = Math.min(...allStars.map(s=>s.x));
-    const maxX = Math.max(...allStars.map(s=>s.x));
-    const minY = Math.min(...allStars.map(s=>s.y));
-    const maxY = Math.max(...allStars.map(s=>s.y));
-    const offX = (W-(maxX-minX))/2 - minX;
-    const offY = (H-(maxY-minY))/2 - minY;
-    const cStars = allStars.map(s => ({ ...s, x:s.x+offX, y:s.y+offY }));
-    const starMap = Object.fromEntries(cStars.map(s=>[s.id,s]));
+    const minX = Math.min(...rawStars.map(s => s.tx));
+    const maxX = Math.max(...rawStars.map(s => s.tx));
+    const minY = Math.min(...rawStars.map(s => s.ty));
+    const maxY = Math.max(...rawStars.map(s => s.ty));
+    const offX = (W - (maxX - minX)) / 2 - minX;
+    const offY = (H - (maxY - minY)) / 2 - minY;
 
-    let phaseLocal = "stars";
+    // ── 3. Shooting stars — each shoots from random edge to target ───
+    const shooters = rawStars.map((s, i) => {
+      const tx = s.tx + offX, ty = s.ty + offY;
+      // Random start point on a random edge
+      const edge = Math.floor(Math.random() * 4);
+      let sx, sy;
+      if (edge === 0) { sx = Math.random() * W; sy = -60; }
+      else if (edge === 1) { sx = W + 60; sy = Math.random() * H; }
+      else if (edge === 2) { sx = Math.random() * W; sy = H + 60; }
+      else { sx = -60; sy = Math.random() * H; }
+      return {
+        id: s.id,
+        sx, sy, tx, ty,
+        cx: sx, cy: sy,         // current position
+        trail: [],               // last N positions
+        delay: i * 90 + Math.random() * 60,  // staggered start
+        duration: 900 + Math.random() * 400, // ms to reach target
+        landed: false,
+        startTime: null,
+        color: ['#fbbf24', '#fff9c4', '#ffe082', '#ffffff'][i % 4],
+      };
+    });
+    const starMap = Object.fromEntries(shooters.map(s => [s.id, s]));
+
+    let allLanded = false;
     let connPhaseStart = null;
     let msgShown = false;
+    let startTime = null;
 
-    const connectTimer = setTimeout(() => {
-      phaseLocal = "connecting";
-      connPhaseStart = performance.now();
-    }, 2500);
+    // ── 4. Complete connections list ──────────────────────────────────
+    const lines = []; // will store {ax,ay,bx,by} for drawn connections
 
     let raf;
     const draw = (ts) => {
-      ctx.clearRect(0,0,W,H);
+      if (!startTime) startTime = ts;
+      const elapsed = ts - startTime;
+
+      // Deep dark sky
+      ctx.clearRect(0, 0, W, H);
+
+      // Twinkling bg
       bgStars.forEach(s => {
-        s.alpha += s.speed*(Math.random()>0.5?1:-1);
-        s.alpha = Math.max(0.1, Math.min(1, s.alpha));
-        ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-        ctx.fillStyle = `rgba(255,255,255,${s.alpha})`; ctx.fill();
+        s.alpha += s.dAlpha;
+        if (s.alpha > 1 || s.alpha < 0.05) s.dAlpha *= -1;
+        s.alpha = Math.max(0.05, Math.min(1, s.alpha));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+        ctx.fill();
       });
 
-      if (phaseLocal === "connecting" && connPhaseStart) {
-        const elapsed = ts - connPhaseStart;
-        const show = Math.min(Math.floor(elapsed/75), allConnections.length);
-        for (let i=0; i<show; i++) {
-          const [aId,bId] = allConnections[i];
-          const a=starMap[aId], b=starMap[bId];
-          if (!a||!b) continue;
-          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
-          ctx.strokeStyle="rgba(251,191,36,0.65)"; ctx.lineWidth=1.8; ctx.stroke();
-        }
-        if (show < allConnections.length) {
-          const prog = (elapsed%75)/75;
-          const [aId,bId] = allConnections[show];
-          const a=starMap[aId], b=starMap[bId];
-          if (a&&b) {
-            ctx.beginPath(); ctx.moveTo(a.x,a.y);
-            ctx.lineTo(a.x+(b.x-a.x)*prog, a.y+(b.y-a.y)*prog);
-            ctx.strokeStyle="rgba(251,191,36,0.95)"; ctx.lineWidth=2.5; ctx.stroke();
-          }
-        }
-        if (show >= allConnections.length && !msgShown) { msgShown=true; setShowMsg(true); }
+      // Occasional random shooting star (atmosphere)
+      if (Math.random() < 0.008) {
+        const sx = Math.random() * W;
+        const sy = Math.random() * H * 0.4;
+        const len = 80 + Math.random() * 120;
+        const angle = Math.PI / 6 + Math.random() * 0.3;
+        const g = ctx.createLinearGradient(sx, sy, sx + len * Math.cos(angle), sy + len * Math.sin(angle));
+        g.addColorStop(0, 'rgba(255,255,255,0)');
+        g.addColorStop(1, 'rgba(255,255,255,0.7)');
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(sx + len * Math.cos(angle), sy + len * Math.sin(angle));
+        ctx.strokeStyle = g;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
       }
 
-      cStars.forEach(s => {
-        const grd = ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,10);
-        grd.addColorStop(0,"rgba(255,240,160,1)");
-        grd.addColorStop(0.4,"rgba(251,191,36,0.6)");
-        grd.addColorStop(1,"rgba(251,191,36,0)");
-        ctx.beginPath(); ctx.arc(s.x,s.y,10,0,Math.PI*2); ctx.fillStyle=grd; ctx.fill();
-        ctx.beginPath(); ctx.arc(s.x,s.y,3,0,Math.PI*2); ctx.fillStyle="white"; ctx.fill();
+      // ── Animate each shooting star flying to target ──
+      let landedCount = 0;
+      shooters.forEach(s => {
+        if (elapsed < s.delay) return;
+        if (s.landed) { landedCount++; return; }
+        if (!s.startTime) s.startTime = ts;
+
+        const t = Math.min((ts - s.startTime) / s.duration, 1);
+        // Easing: ease-in-out
+        const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+        s.cx = s.sx + (s.tx - s.sx) * ease;
+        s.cy = s.sy + (s.ty - s.sy) * ease;
+
+        // Store trail
+        s.trail.push({ x: s.cx, y: s.cy });
+        if (s.trail.length > 22) s.trail.shift();
+
+        // Draw glowing trail
+        for (let i = 1; i < s.trail.length; i++) {
+          const alpha = (i / s.trail.length) * 0.8;
+          const width = (i / s.trail.length) * 3;
+          ctx.beginPath();
+          ctx.moveTo(s.trail[i - 1].x, s.trail[i - 1].y);
+          ctx.lineTo(s.trail[i].x, s.trail[i].y);
+          ctx.strokeStyle = `rgba(255,230,100,${alpha})`;
+          ctx.lineWidth = width;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+        }
+
+        // Head glow
+        const headGrd = ctx.createRadialGradient(s.cx, s.cy, 0, s.cx, s.cy, 12);
+        headGrd.addColorStop(0, 'rgba(255,255,200,1)');
+        headGrd.addColorStop(0.4, 'rgba(255,210,60,0.6)');
+        headGrd.addColorStop(1, 'rgba(255,210,60,0)');
+        ctx.beginPath();
+        ctx.arc(s.cx, s.cy, 12, 0, Math.PI * 2);
+        ctx.fillStyle = headGrd;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(s.cx, s.cy, 3, 0, Math.PI * 2);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+
+        if (t >= 1) {
+          s.landed = true;
+          landedCount++;
+          // Landing burst
+          s.cx = s.tx; s.cy = s.ty;
+          s.trail = [];
+        }
+      });
+
+      // Once all landed, start connecting
+      if (landedCount >= shooters.length && !allLanded) {
+        allLanded = true;
+        connPhaseStart = ts;
+      }
+
+      // ── Draw completed connections ──
+      if (allLanded && connPhaseStart) {
+        const cElapsed = ts - connPhaseStart;
+        const showLines = Math.min(Math.floor(cElapsed / 80), allConnections.length);
+        for (let i = 0; i < showLines; i++) {
+          const [aId, bId] = allConnections[i];
+          const a = starMap[aId], b = starMap[bId];
+          if (!a || !b) continue;
+          // Gold glow line
+          ctx.beginPath();
+          ctx.moveTo(a.tx, a.ty);
+          ctx.lineTo(b.tx, b.ty);
+          ctx.strokeStyle = 'rgba(251,191,36,0.7)';
+          ctx.lineWidth = 2;
+          ctx.shadowColor = '#fbbf24';
+          ctx.shadowBlur = 8;
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        }
+        // Animate current line being drawn
+        if (showLines < allConnections.length) {
+          const prog = (cElapsed % 80) / 80;
+          const [aId, bId] = allConnections[showLines];
+          const a = starMap[aId], b = starMap[bId];
+          if (a && b) {
+            ctx.beginPath();
+            ctx.moveTo(a.tx, a.ty);
+            ctx.lineTo(a.tx + (b.tx - a.tx) * prog, a.ty + (b.ty - a.ty) * prog);
+            ctx.strokeStyle = 'rgba(255,240,100,1)';
+            ctx.lineWidth = 2.5;
+            ctx.shadowColor = '#fff';
+            ctx.shadowBlur = 12;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+          }
+        }
+        if (showLines >= allConnections.length && !msgShown) {
+          msgShown = true;
+          setShowMsg(true);
+        }
+      }
+
+      // ── Draw landed stars (glowing) ──
+      shooters.forEach(s => {
+        if (!s.landed && elapsed < s.delay) return;
+        const grd = ctx.createRadialGradient(s.tx, s.ty, 0, s.tx, s.ty, 11);
+        grd.addColorStop(0, 'rgba(255,245,180,1)');
+        grd.addColorStop(0.5, 'rgba(251,191,36,0.5)');
+        grd.addColorStop(1, 'rgba(251,191,36,0)');
+        ctx.beginPath();
+        ctx.arc(s.tx, s.ty, 11, 0, Math.PI * 2);
+        ctx.fillStyle = grd;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(s.tx, s.ty, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'white';
+        ctx.fill();
       });
 
       raf = requestAnimationFrame(draw);
     };
     raf = requestAnimationFrame(draw);
-    return () => { clearTimeout(connectTimer); cancelAnimationFrame(raf); };
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   return (
@@ -526,22 +712,40 @@ export function ConstellationScene({ onNext }) {
       <canvas className="constellation-canvas" ref={canvasRef} />
       <AnimatePresence>
         {showMsg && (
-          <motion.div className="constellation-message"
-            initial={{ opacity:0, scale:0.8 }} animate={{ opacity:1, scale:1 }}
-            transition={{ duration:1.2, type:"spring" }}>
-            <h1>Happy Birthday, Akansha!</h1>
+          <motion.div
+            className="constellation-message"
+            initial={{ opacity: 0, scale: 0.7, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 1.4, type: 'spring', damping: 14 }}
+          >
+            <motion.div
+              animate={{ opacity: [0.6, 1, 0.6] }}
+              transition={{ duration: 2.5, repeat: Infinity }}
+              style={{ fontSize: '3rem', marginBottom: '0.5rem' }}
+            >✨</motion.div>
+            <h1>Happy Birthday, Akansha! 🌟</h1>
             <p>Even the stars know your name</p>
-            <motion.button className="btn-primary" style={{ marginTop:"2rem", pointerEvents:"auto" }}
-              onClick={onNext} initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:1.5 }}>
-              Continue to your surprise
+            <motion.button
+              className="btn-primary"
+              style={{ marginTop: '2rem', pointerEvents: 'auto', fontSize: '1.2rem', padding: '1.1rem 3rem' }}
+              onClick={onNext}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2 }}
+              whileHover={{ scale: 1.08 }}
+            >
+              💖 Forever & Always
             </motion.button>
           </motion.div>
         )}
       </AnimatePresence>
       {!showMsg && (
-        <motion.div className="constellation-message"
-          animate={{ opacity:[0.5,1,0.5] }} transition={{ duration:2, repeat:Infinity }}>
-          <p style={{ fontSize:"1rem" }}>Watch the stars connect...</p>
+        <motion.div
+          className="constellation-message"
+          animate={{ opacity: [0.4, 1, 0.4] }}
+          transition={{ duration: 2.5, repeat: Infinity }}
+        >
+          <p style={{ fontSize: '1.2rem', letterSpacing: '2px' }}>✨ Watch the stars find their place... ✨</p>
         </motion.div>
       )}
     </motion.div>
