@@ -178,11 +178,11 @@ export function EnvelopeScene({ onNext }) {
             <div className="envelope-front"></div>
             <div className={`envelope-flap ${opened ? "open" : ""}`}>
               {!opened && (
-                <motion.div
-                  style={{ position:"absolute", top:"-70px", left:"-60px", width:"120px", textAlign:"center", color:"#fff", fontSize:"1.2rem", fontFamily:"'Kalam',cursive", pointerEvents:"none" }}
+                <motion.div 
+                  style={{ position:"absolute", top:"-40px", width:"100%", textAlign:"center", color:"#fff", fontSize:"1.2rem", fontWeight:"bold", textShadow:"0 2px 4px rgba(0,0,0,0.4)" }}
                   animate={{ y:[0,-8,0] }} transition={{ duration:2, repeat:Infinity, ease:"easeInOut" }}
                 >
-                  ✉️ Open Me
+                  Open Me
                 </motion.div>
               )}
             </div>
@@ -202,7 +202,7 @@ export function EnvelopeScene({ onNext }) {
           >
             {/* Tape strip at top */}
             <div style={{ position:"absolute", top:"-16px", left:"50%", transform:"translateX(-50%) rotate(-2deg)", width:"100px", height:"24px", background:"rgba(255,240,180,0.7)", borderRadius:"2px", boxShadow:"0 2px 4px rgba(0,0,0,0.1)" }} />
-            <h3>Dear Akansha, 🌸</h3>
+            <h3>Dear Akansha,</h3>
             <p style={{ whiteSpace:"pre-line" }}>
               {typedText}{typedText.length < fullText.length && <span className="cursor-blink">|</span>}
             </p>
@@ -215,7 +215,7 @@ export function EnvelopeScene({ onNext }) {
             {typedText.length >= fullText.length && (
               <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:1.5 }} style={{ marginTop:"1.5rem", width:"100%", textAlign:"center" }}>
                 <span onClick={onNext} style={{ cursor:"pointer", color:"#ec4899", fontWeight:"bold", borderBottom:"2px solid #ec4899", paddingBottom:"2px", fontSize:"1.2rem", fontFamily:"'Outfit',sans-serif" }}>
-                  See the memories 📸
+                  See the memories
                 </span>
               </motion.div>
             )}
@@ -707,7 +707,7 @@ export function ConstellationScene({ onNext }) {
           animate={{ opacity: [0.4, 1, 0.4] }}
           transition={{ duration: 2.5, repeat: Infinity }}
         >
-          <p style={{ fontSize: '1.2rem', letterSpacing: '2px' }}>✨ A sky full of stars, just for you... ✨</p>
+          <p style={{ fontSize: '1.2rem', letterSpacing: '2px' }}>A sky full of stars, just for you...</p>
         </motion.div>
       )}
     </motion.div>
@@ -719,12 +719,6 @@ export function Welcome({ onNext }) {
   return (
     <motion.div className="scene-container glass-panel" {...fadeIn} style={{ maxWidth:"780px", padding:"5rem 6rem" }}>
       <motion.div style={{ textAlign:"center" }}>
-        {/* Floating sparkle */}
-        <motion.div
-          animate={{ y:[-10,10,-10], rotate:[0,15,-15,0] }}
-          transition={{ duration:4, repeat:Infinity, ease:"easeInOut" }}
-          style={{ fontSize:"3rem", marginBottom:"1.5rem", display:"block" }}
-        >✨</motion.div>
 
         <motion.h1
           animate={{ backgroundPosition:["0% 50%","100% 50%","0% 50%"] }}
@@ -740,7 +734,7 @@ export function Welcome({ onNext }) {
           transition={{ delay:0.6 }}
           style={{ fontSize:"1.4rem", color:"rgba(255,255,255,0.85)", lineHeight:"1.8", marginBottom:"2.5rem", maxWidth:"480px", margin:"0 auto 2.5rem" }}
         >
-          Something special is waiting for you. 💌<br />Turn up the volume, sit back, and press the button below.
+          Something special is waiting for you.<br />Turn up the volume, sit back, and press the button below.
         </motion.p>
 
         <motion.button
@@ -753,7 +747,7 @@ export function Welcome({ onNext }) {
           animate={{ opacity:1, y:0 }}
           transition={{ delay:1.0 }}
         >
-          I'm Ready 🎉
+          I'm Ready
         </motion.button>
 
         <motion.p
@@ -762,7 +756,7 @@ export function Welcome({ onNext }) {
           transition={{ delay:2 }}
           style={{ fontSize:"0.9rem", color:"rgba(255,255,255,0.4)", marginTop:"2rem", marginBottom:0 }}
         >
-          Made with ❤️ just for you
+          Made just for you
         </motion.p>
       </motion.div>
     </motion.div>
