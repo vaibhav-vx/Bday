@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { Welcome, CakeScene, EnvelopeScene, MemoryBookScene, CameraCaptureScene, PartyQuestionScene, FinalScene } from './Scenes';
+import { Welcome, CakeScene, EnvelopeScene, MemoryBookScene, CameraCaptureScene, PartyQuestionScene, FinalScene, ConstellationScene } from './Scenes';
 import './index.css';
 
 function App() {
@@ -18,7 +18,8 @@ function App() {
         {scene === 3 && <MemoryBookScene key="book" onNext={nextScene} />}
         {scene === 4 && <CameraCaptureScene key="camera" onNext={nextScene} setCapturedImage={setCapturedImage} />}
         {scene === 5 && <PartyQuestionScene key="party" onNext={nextScene} />}
-        {scene === 6 && <FinalScene key="final" capturedImage={capturedImage} />}
+        {scene === 6 && <FinalScene key="final" capturedImage={capturedImage} onNext={nextScene} />}
+        {scene === 7 && <ConstellationScene key="constellation" onNext={nextScene} />}
       </AnimatePresence>
     </>
   );
