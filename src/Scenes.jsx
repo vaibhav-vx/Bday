@@ -687,35 +687,7 @@ export function ConstellationScene({ onNext }) {
   return (
     <motion.div className="constellation-scene" {...fadeIn}>
       <canvas className="constellation-canvas" ref={canvasRef} />
-      <AnimatePresence>
-        {showMsg && (
-          <motion.div
-            className="constellation-message"
-            initial={{ opacity: 0, scale: 0.7, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 1.4, type: 'spring', damping: 14 }}
-          >
-            <motion.div
-              animate={{ opacity: [0.6, 1, 0.6] }}
-              transition={{ duration: 2.5, repeat: Infinity }}
-              style={{ fontSize: '3rem', marginBottom: '0.5rem' }}
-            >✨</motion.div>
-            <h1>Happy Birthday, Akansha! 🌟</h1>
-            <p>Even the stars know your name</p>
-            <motion.button
-              className="btn-primary"
-              style={{ marginTop: '2rem', pointerEvents: 'auto', fontSize: '1.2rem', padding: '1.1rem 3rem' }}
-              onClick={onNext}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2 }}
-              whileHover={{ scale: 1.08 }}
-            >
-              💖 Forever & Always
-            </motion.button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Let the name shine on its own */}
       {!showMsg && (
         <motion.div
           className="constellation-message"
