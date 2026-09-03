@@ -134,7 +134,7 @@ export function EnvelopeScene({ onNext }) {
   const [opened, setOpened] = useState(false);
   const [letterOut, setLetterOut] = useState(false);
   const [typedText, setTypedText] = useState("");
-  const fullText = `Hey Akansha,\n\nI just wanted to take a moment to tell you how much you mean to me as a friend. You bring so much joy and positivity into the lives of everyone around you.\n\nI wish you a year filled with amazing adventures, endless laughter, and all the happiness you deserve. Keep shining and being your incredible self!\n\nHappy Birthday! 🎉`;
+  const fullText = `Hey Shorty,\n\nHappy Birthday! 🎉 I just wanted to take a moment to tell you how awesome it is to have you as a friend. You bring so much fun and chaos into everyone's life, and honestly, we wouldn't survive without it.\n\nI wish you a year filled with crazy adventures, non-stop laughter, and all the great things you deserve. Keep being your incredible, dramatic self!\n\nIss garib insaan ki party mat bhulna 2 din se kuch khaya nhi hai ki tu khilayegi 😂`;
   const handleOpen = () => {
     if (opened) return;
     setOpened(true);
@@ -195,8 +195,8 @@ export function EnvelopeScene({ onNext }) {
             </p>
             {typedText.length >= fullText.length && (
               <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.5 }} style={{ marginTop:"2rem", textAlign:"right", width:"100%" }}>
-                <p style={{ fontFamily:"'Dancing Script',cursive", fontSize:"1.5rem", color:"#b45309", marginBottom:0 }}>With all my love,</p>
-                <p className="signature">Vaibhav 💖</p>
+                <p style={{ fontFamily:"'Outfit',sans-serif", fontSize:"1rem", color:"#555", marginBottom:0, fontWeight:"600", fontStyle:"italic" }}>Technical Head,</p>
+                <p className="signature" style={{ fontSize:"1.6rem", color:"#333", marginTop:"0.2rem" }}>Vaibhav</p>
               </motion.div>
             )}
             {typedText.length >= fullText.length && (

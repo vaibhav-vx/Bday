@@ -209,31 +209,30 @@ p {
   position: relative;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #c8a070, #b8905a, #c8a070);
-  border-radius: 12px;
-  box-shadow: 0 35px 70px rgba(0,0,0,0.55), inset 0 0 50px rgba(0,0,0,0.12);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: #e6e0d4; /* Darker inside */
+  border-radius: 4px; /* Real envelopes have slight rounding */
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 0 40px rgba(0,0,0,0.1);
 }
 .envelope::before {
   content: '';
   position: absolute;
   top:0; left:0; right:0; bottom:0;
-  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
   pointer-events: none;
-  border-radius: 12px;
+  border-radius: 4px;
 }
 .envelope-front {
   position: absolute;
   width: 0; height: 0;
-  border-left: 300px solid #e8c898;
-  border-right: 300px solid #ddb070;
-  border-bottom: 188px solid #d4a870;
+  border-left: 300px solid #fdfbf7;
+  border-right: 300px solid #f9f6f0;
+  border-bottom: 188px solid #f4f0e6;
   border-top: 188px solid transparent;
   bottom: 0; left: 0;
   z-index: 3;
   pointer-events: none;
-  border-radius: 0 0 12px 12px;
-  filter: drop-shadow(0 -8px 15px rgba(0,0,0,0.12));
+  border-radius: 0 0 4px 4px;
+  filter: drop-shadow(0 -4px 10px rgba(0,0,0,0.08));
 }
 .envelope-flap {
   position: absolute;
@@ -241,32 +240,13 @@ p {
   width: 0; height: 0;
   border-left: 300px solid transparent;
   border-right: 300px solid transparent;
-  border-top: 210px solid #c89060;
+  border-top: 210px solid #fdfbf7;
   transform-origin: top center;
   transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 4;
-  filter: drop-shadow(0 8px 15px rgba(0,0,0,0.25));
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
 }
-.envelope-flap.open { transform: rotateX(180deg); z-index: 1; }
-
-.envelope-front::after {
-  content: '';
-  position: absolute;
-  top: 30px; left: -260px;
-  width: 120px; height: 120px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M20 50 Q 50 10, 80 50 T 20 50' fill='none' stroke='rgba(0,0,0,0.4)' stroke-width='3' stroke-dasharray='5,5'/%3E%3Cpath d='M40 70 L 60 70 M50 60 L 50 80' stroke='rgba(0,0,0,0.4)' stroke-width='2'/%3E%3Ctext x='15' y='40' font-family='cursive' font-size='16' fill='rgba(0,0,0,0.6)' transform='rotate(-15, 15, 40)'%3EFor Akansha%3C/text%3E%3Cpath d='M 80 20 Q 90 10, 95 20 Q 100 30, 80 45 Q 60 30, 65 20 Q 70 10, 80 20' fill='rgba(0,0,0,0.1)' stroke='rgba(0,0,0,0.3)' stroke-width='2'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 6;
-}
-.envelope-front::before {
-  content: '';
-  position: absolute;
-  bottom: -150px; right: -260px;
-  width: 150px; height: 150px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='rgba(0,0,0,0.15)' stroke-width='3' stroke-dasharray='6,4'/%3E%3Ccircle cx='50' cy='50' r='32' fill='none' stroke='rgba(0,0,0,0.15)' stroke-width='1'/%3E%3Ctext x='50' y='55' font-family='sans-serif' font-size='12' font-weight='bold' fill='rgba(0,0,0,0.3)' text-anchor='middle' transform='rotate(-20, 50, 50)'%3ESPECIAL%3C/text%3E%3Ctext x='50' y='68' font-family='sans-serif' font-size='8' fill='rgba(0,0,0,0.3)' text-anchor='middle' transform='rotate(-20, 50, 50)'%3EDELIVERY%3C/text%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 6;
-}
+.envelope-flap.open { transform: rotateX(180deg); z-index: 1; filter: drop-shadow(0 -6px 12px rgba(0,0,0,0.1)); }
 
 /* ── Letter (Desktop - Large) ── */
 .letter {
