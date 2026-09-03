@@ -331,15 +331,29 @@ export function CameraCaptureScene({ onNext, setCapturedImage }) {
   const [hasCaptured, setHasCaptured] = useState(false);
   const [imgData, setImgData] = useState(null);
   useEffect(() => {
+    let active = true;
     async function setup() {
       try {
         const str = await navigator.mediaDevices.getUserMedia({ video: true });
+        if (!active) {
+          str.getTracks().forEach(t => t.stop());
+          return;
+        }
         setStream(str);
         if (videoRef.current) videoRef.current.srcObject = str;
-      } catch { setError("Camera access denied."); }
+      } catch (err) {
+        if (active) {
+          console.warn("Camera access denied or unavailable, skipping scene.");
+          setCapturedImage("/assets/photo.jpg");
+          onNext();
+        }
+      }
     }
     setup();
-    return () => { if (stream) stream.getTracks().forEach(t => t.stop()); };
+    return () => { 
+      active = false;
+      if (stream) stream.getTracks().forEach(t => t.stop()); 
+    };
   }, []);
   const capture = () => {
     if (videoRef.current && canvasRef.current) {
@@ -500,7 +514,7 @@ export function ConstellationScene({ onNext }) {
       const offCanvas = document.createElement('canvas');
       offCanvas.width = W; offCanvas.height = H;
       const offCtx = offCanvas.getContext('2d', { willReadFrequently: true });
-      offCtx.font = "italic 160px 'Dancing Script', cursive";
+      offCtx.font = "bold 160px 'Dancing Script', cursive";
       offCtx.fillStyle = "white";
       offCtx.textAlign = "center";
       offCtx.textBaseline = "middle";
@@ -569,7 +583,7 @@ export function ConstellationScene({ onNext }) {
       const glowCanvas = document.createElement('canvas');
       glowCanvas.width = W; glowCanvas.height = H;
       const glowCtx = glowCanvas.getContext('2d');
-      glowCtx.font = "italic 160px 'Dancing Script', cursive";
+      glowCtx.font = "bold 160px 'Dancing Script', cursive";
       glowCtx.textAlign = "center";
       glowCtx.textBaseline = "middle";
       glowCtx.shadowColor = "#fbbf24";
