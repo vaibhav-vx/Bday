@@ -102,19 +102,14 @@ export function CakeScene({ onNext }) {
         <ScratchCard onRevealed={() => setIsRevealed(true)}>
           <div style={{ position:"relative", width:"100%", height:"100%" }}>
             <motion.img 
-              src="/assets/cake.jpg" 
+              src={blown ? "/assets/cake_unlit.jpg" : "/assets/cake.jpg"} 
               alt="Cake" 
               style={{ 
                 width:"100%", height:"100%", objectFit:"cover", borderRadius:"50%", 
                 border:"4px solid rgba(255,255,255,0.1)", 
-                filter: blown ? "brightness(0.6) contrast(1.1)" : "brightness(1)", 
-                transition: "filter 0.5s ease" 
+                transition: "all 0.5s ease" 
               }} 
             />
-            {/* Mask to hide the underlying photo's lit candle when blown */}
-            {blown && (
-              <div style={{ position:"absolute", top:"20%", left:"50%", transform:"translate(-50%,-50%)", width:"80px", height:"80px", background:"radial-gradient(circle, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 70%)", zIndex:2, borderRadius:"50%" }}></div>
-            )}
             <div className="flame-wrapper">
               {!blown && <div className="flame"></div>}
               {blown && <div className="smoke"></div>}
